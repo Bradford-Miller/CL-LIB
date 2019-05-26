@@ -1,0 +1,285 @@
+<html><head><title>CL-LIB</title></head><body><h3>API for package CL-LIB</h3>
+<blockquote>A useful collection of functions that keep coming
+  up in general CL programming. Note that some are loaded by their own
+  system file (e.g., cl-lib-scheme-streams), so one can use only the
+  base system (cl-lib-essentials) plus those parts that one really
+  needs for a particular application.</blockquote>
+<p><b>*after-gc-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Initializations to be run after a gc</blockquote>
+<blockquote>Initial value: <tt>NIL</tt></blockquote>
+<p><b>*before-cold-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Initializations run just before saving a non-checkpointed world</blockquote>
+<blockquote>Initial value: <tt>(#S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "User Notification" :FORM (IF (CL-LIB-ESSENTIALS:INTERACTIVE-LISP-P) (FORMAT *ERROR-OUTPUT* "~2&--> Running Before-Cold Initializations~2%")) :FLAG NIL :RUN (:NORMAL)) #S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "Reset Cold Initializations" :FORM (CL-LIB-INITIALIZATIONS:RESET-INITIALIZATIONS (QUOTE CL-LIB-INITIALIZATIONS:*COLD-INITIALIZATION-LIST*)) :FLAG NIL :RUN (:NORMAL)))</tt></blockquote>
+<p><b>*cold-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Initializations run just after booting a non-checkpointed world</blockquote>
+<blockquote>Initial value: <tt>(#S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "User Notification" :FORM (IF (CL-LIB-ESSENTIALS:INTERACTIVE-LISP-P) (FORMAT *ERROR-OUTPUT* "~2&--> Running Cold Initializations~2%")) :FLAG T :RUN (:NORMAL)))</tt></blockquote>
+<p><b>*gc-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Initializations to be run before a gc</blockquote>
+<blockquote>Initial value: <tt>NIL</tt></blockquote>
+<p><b>*general-warning-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>For Warn-Or-Error, if the function doesn't want it's own checklist.</blockquote>
+<blockquote>Initial value: <tt>NIL</tt></blockquote>
+<p><b>*initialization-keywords*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Alist of initialization-list keywords and the list itself. Third element,
+if present, is the default run time, :normal if absent. This can be overridden
+by the add-initialization function.</blockquote>
+<blockquote>Initial value: <tt>((:WARM CL-LIB-INITIALIZATIONS:*WARM-INITIALIZATION-LIST*) (:COLD CL-LIB-INITIALIZATIONS:*COLD-INITIALIZATION-LIST*) (:BEFORE-COLD CL-LIB-INITIALIZATIONS:*BEFORE-COLD-INITIALIZATION-LIST*) (:ONCE CL-LIB-INITIALIZATIONS:*ONCE-INITIALIZATION-LIST* :FIRST) (:GC CL-LIB-INITIALIZATIONS:*GC-INITIALIZATION-LIST*) (:AFTER-GC CL-LIB-INITIALIZATIONS:*AFTER-GC-INITIALIZATION-LIST*))</tt></blockquote>
+<p><b>*LOAD-FORM-QUOTE-P-FN*</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>*once-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Initializations to be run only once</blockquote>
+<blockquote>Initial value: <tt>NIL</tt></blockquote>
+<p><b>*suppress-clim*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Turn off clim i/o</blockquote>
+<blockquote>Initial value: <tt>NIL</tt></blockquote>
+<p><b>*warm-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
+<blockquote>Initializations run just after booting any world</blockquote>
+<blockquote>Initial value: <tt>(#S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "User Notification" :FORM (IF (CL-LIB-ESSENTIALS:INTERACTIVE-LISP-P) (FORMAT *ERROR-OUTPUT* "~2&--> Running Warm Initializations~2%")) :FLAG T :RUN (:NORMAL)) #S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "Announce cl-lib is on the job" :FORM (WHEN (AND CL-LIB-ESSENTIALS:*CL-LIB-VERSION-ANNOUNCE-P* (CL-LIB-ESSENTIALS:INTERACTIVE-LISP-P)) (CL-LIB-ESSENTIALS:REPORT-VERSION)) :FLAG T :RUN (:NORMAL)))</tt></blockquote>
+<p><b>*WARN-OR-ERROR-CLEANUP-INITIALIZATIONS*</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>add-initialization</b> name form &optional keywords initialization-list-name)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>The initialization form is given name name and added to the initialization list
+specified either by the keywords or passed directly. The keywords can also be used
+to change the default time to evaluate the initialization.</blockquote><p>(<b>add-syntax</b> name readtable-symbol)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Associate the name with the readtable-symbol, a quoted variable containing the readtable.</blockquote><p>(<b>alistify</b> list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Turns a list of the form '(:key :value :key :value) as one might get with a lambda list into an alist
+'((:key :value) (:key :value))</blockquote><p><b>AND-LIST</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>car-eq</b> x y)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Checks whether Y is eq to the car of X.</blockquote><p>(<b>cartesian-product</b> set1 set2)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns the cross product of two sets.</blockquote><p>(<b>check</b> vars operation assertion format-string &rest format-args)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>An enhanced version of assert, that takes an operation to perform on args, which can be refered to by the assertion as check.</blockquote><p>(<b>circular-list</b> &rest list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Creates a circular list of the arguments. Handy for use with 
+   the list mapping functions. For example, 
+     (mapcar #'+ '(1 2 3 4 5) (circular-list 3)) --> (4 5 6 7 8)
+     (mapcar #'+ '(1 2 3 4 5) (circular-list 0 1)) --> (1 3 3 5 5)</blockquote><p><b>CLEAR-LOAD-ONCE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>COMMAND-LINE-ARG</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>comment</b> &rest anything)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Expands into nothing</blockquote><p>(<b>cond-binding-predicate-to</b> symbol &rest clauses)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>(cond-binding-predicate-to symbol . clauses)                      [macro]
+a COND-like macro.  The clauses are exactly as in COND.  In the body
+of a clause, the SYMBOL is lexically bound to the value returned by the
+test.  Example: 
+
+  (cond-binding-predicate-to others
+    ((member 'x '(a b c x y z))
+     (reverse others)))
+
+evaluates to
+  
+  (x y z)</blockquote><p><b>CONS-SCHEME-STREAM</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>copy-array</b>)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns an (exact) copy of the passed array, with same size, fill
+pointer (if there is one), adjustable quality, element type, and
+contents. Uses element-copier to copy elements (default #'identity).</blockquote><p><b>COPY-HASH-TABLE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>cross-product</b> &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns the cross product of a set of lists.</blockquote><p><b>CRUSH</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>defclass-x</b> type supertypes slots &rest stuff)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Extended defclass, also creates a TYPE-P function and MAKE-TYPE
+function, like defstuct did.</blockquote><p><b>DEFFLAG</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>DEFFLAGS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>delete-initialization</b> name &optional keywords initialization-list-name)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Delete the initialization with name from either the list specified with the
+keywords, or passed as initialization-list-name.</blockquote><p>(<b>delete-n</b> list n)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Delete the nth element (0-based) of the list. Destructive.</blockquote><p>(<b>dequeue</b> q)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Queue is altered (by side effect) by removing the oldest element in
+queue. THe removed element is returned. When queue is empty, the
+results are undefined.</blockquote><p><b>DETERMINE-SLOT-INITIALIZERS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>DETERMINE-SLOT-READERS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>DETERMINE-SLOT-WRITERS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>displace</b> list val)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Replaces LIST with VAL by destructively modifying the car and cdr of LIST.
+   Warning: VAL must not share list structure with LIST or you'll be sorry.</blockquote><p>(<b>dofile</b> (var filename &optional return-form) &body body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Opens the specified file for input, reads successive lines 
+   from the file, setting the specified variable <var> to 
+   each line. When end of file is reached, the value of <return-form>
+   is returned.</blockquote><p>(<b>dosequence</b> (var sequence &optional result) &body body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>(dosequence (var sequence &optional result) &body body)      [macro]
+This macro is like DOLIST (q.v.), except that the iteration is over
+any sequence, not necessarily a list.</blockquote><p>(<b>dremove</b> item list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Destructive remove which replaces the original list with the list
+   that results when ITEM is deleted from LIST.</blockquote><p>(<b>elapsed-time-in-seconds</b> base now)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns the time in seconds that has elapsed between Base and Now.
+Just subtracts Base from Now to get elapsed time in internal time units,
+then divides by the number of internal units per second to get seconds.</blockquote><p>(<b>empty-queue-p</b> q)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns t if queue does not contain any elements and nil otherwise</blockquote><p>(<b>enqueue</b> q item)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Queue is altered (by side-effect) by adding the element item into
+queue. The return value (if any) is undefined.</blockquote><p>(<b>eqmemb</b> item list &key (test (function equal)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Checks whether ITEM is either equal to or a member of LIST.</blockquote><p>(<b>eqv</b> &rest predicates)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>True iff all predicates produce the same result according to eql,
+or passed :test (exclusive nor if binary)</blockquote><p>(<b>every-dotted-list</b> fn &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like normal Every, but handles dotted lists, and will apply the fn
+to the dotted arguments, unless they are (all) NIL.</blockquote><p><b>EXPLODE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>extract-keyword</b> key arglist &optional default &key no-value)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Searches the arglist for keyword key, and returns the following mark,
+   or the default if supplied. If no-value is non-nil, then if the key is present and nothing follows it,
+   the no-value parameter it is returned.</blockquote><p>(<b>factorial</b> n)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Compute the factorial of an integer</blockquote><p><b>FAKE-SCHEME-DELAY</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>fast-intersection</b> list1 list2 predicate &key (test (function eql)) (key (function identity)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like Intersection (but no support for test-not) should be faster
+because list1 and list2 must be sorted.  Fast-Intersection is a
+variation on Merge that handles duplicates. Predicate is the sort
+predicate.</blockquote><p>(<b>fast-union</b> list1 list2 predicate &key (test (function eql)) (key (function identity)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like Union (but no support for test-not) should be faster because
+list1 and list2 must be sorted.  Fast-Union is a Merge that handles
+duplicates. Predicate is the sort predicate.</blockquote><p>(<b>flatten</b> l)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Flattens list L, i.e., returns a single list containing the
+ same atoms as L but with any internal lists 'dissolved'. For example,
+ (flatten '(a (b c) d))  ==>  (a b c d)
+
+ Recursively flattens components of L, according to the following rules-
+  - an atom is already flattened.
+  - a list whose CAR is also a list is flattened by appending the
+    flattened CAR to the flattened CDR (this is what dissolves internal
+    lists).
+  - a list whose CAR is an atom is flattened by just flattening the CDR
+    and CONSing the original CAR onto the result.
+ These rules were chosen with some attention to minimizing CONSing.</blockquote><p><b>FORCE-LIST</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>force-string</b> thing)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Generates a string representation of Thing. This representation
+is the print name for symbols, otherwise whatever 'coerce' can do (which may
+be to generate an error sometimes).</blockquote><p><b>GENERATE-LEGAL-SLOT-INITARGS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>get-compiled-function-name</b> fn)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns the symbol name of a function. Covers the six major CL vendors.</blockquote><p><b>GETENV</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>IF*</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>IMPLODE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>initializations</b> initialization-list-name &optional redo (flag t))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Run the initializations on the passed list. If redo is non-nil, then the
+current value of the flag on the initialization is ignored, and the 
+initialization is always run. Otherwise an initialization is only run if
+the associated flag is NIL. Flag is the value stored into the initialization's
+flag when it is run.</blockquote><p>(<b>let*-non-null</b> bindings &body body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>like let*, but if any binding is made to NIL, the let*-non-null
+immediately returns NIL.</blockquote><p>(<b>let-maybe</b> condition bindings &body body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Binds let arguments only if condition is non-nil, and evaluates body in any case.</blockquote><p>(<b>list-scheme-stream</b> &rest args)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Analogue to the cl list function, only the last arg is delayed.</blockquote><p>(<b>list-without-nulls</b> list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns a copy of list with all null elements removed.</blockquote><p>(<b>listify-string</b> string)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Turns a string into a list of symbols.</blockquote><p><b>LOAD-ONCE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>LOCATION-CONTENTS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>LOCATIVE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>LOCATIVE-P</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>locf</b> reference &environment env)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Much like seeing a setf</blockquote><p><b>MACRO-INDENT-RULE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>MAKE-KEYWORD</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>MAKE-LOAD-FORM-WITH-ALL-SLOTS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>make-plist</b> keys data &optional (plist (quote NIL)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Constructs a property list from keys and data (addition to plist).</blockquote><p>(<b>make-queue</b>)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Creates and returns a new empty queue</blockquote><p><b>MAKE-SCHEME-STREAM</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>MAKE-VARIABLE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>mapatoms</b> func &optional (package *package*) (inherited-symbols-too t))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Maps the passed function over all symbols in the package, and if inherited-symbols-too is non-nil, then
+over those symbols as well. Note that the function may be called >once on a symbol.</blockquote><p>(<b>mapc-dotted-list</b> fn &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like normal Mapc, but handles dotted lists, and will apply the fn
+to the dotted argument, unless it is NIL</blockquote><p>(<b>mapcan-dotted-list</b> fn &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like normal Mapcan, but handles dotted lists, and will apply the fn
+to the dotted argument, unless it is NIL</blockquote><p>(<b>mapcar-dotted-list</b> fn &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like normal Mapcar, but handles dotted lists, and will apply the fn
+to the dotted argument, unless it is NIL</blockquote><p>(<b>maplist-dotted-list</b> fn &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like normal Maplist, but handles dotted lists, and will apply the
+fn to the dotted argument, unless it is NIL</blockquote><p><b>MLET</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>MSETQ</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>MV-PROGFOO</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>nand</b> &rest predicates)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>True only if all predicates are not true. Short circutes when it
+finds one is false.</blockquote><p>(<b>neq</b> x y)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>not eq</blockquote><p>(<b>nor</b> &rest predicates)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>True only if all predicates are false. Short circutes when it finds
+a one is true.</blockquote><p><b>OR-LIST</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>parser-error</b> stream format-string &rest format-args)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Process an error within the parse process, e.g. reader macros. On some systems (e.g. lisp machines) this will invoke
+the rubout handler, and let you fix up your input.</blockquote><p>(<b>permutations</b> items)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Given a list of items, returns all possible permutations of the list.</blockquote><p>(<b>powerset</b> list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Given a set, returns the set of all subsets of the set.</blockquote><p>(<b>prefix?</b> prefix seq)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Prefix? - Checks to see if Prefix is really a prefix of Seq. Returns
+T if it is, NIL otherwise. Just checks that Prefix is no longer than
+Seq, then checks to see if the the initial subsequence of Seq that is
+the same length as Prefix is equal to Prefix. Prefix is a real prefix
+if and only if both conditions hold.</blockquote><p><b>PROGFOO</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>prompt-and-read</b> prompt &rest prompt-args)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Prompt the user for an arbitrary response.</blockquote><p>(<b>prompt-for</b> type &optional prompt &rest prompt-args)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>inspired by cltl/2, condition chapter.</blockquote><p>(<b>queue-elements</b> q)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns a list of the elements in queue with the oldest element first.
+The list returned may share structure with queue and therefore may be altered
+by subsequent calls on enqueue and/or dequeue</blockquote><p>(<b>queue-front</b> q)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns the oldest element in queue (i.e., the element that has
+been in the queue the longest). When queue is empty, the results are
+undefined</blockquote><p>(<b>read-delimited-string</b> delimiters &optional (stream *standard-input*) (eof-error-p t) eof-value)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Read a stream until one of the delimiters (a list of characters) is
+found. Returns the characters so read until the delimiter as a string,
+plus the additional values: EOF-VALUE, which is as passed if eof was
+reached, and the delimiter that caused termination of the string. If
+EOF-ERROR-P is non-nil (the default), then an EOF causes an error to
+be signalled instead of returning EOF-VALUE.</blockquote><p>(<b>regex</b> expression string)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Usage: (regex <expression> <string)
+   This function will call regex-compile on the expression and then apply
+   the string to the returned lambda list.</blockquote><p>(<b>regex-compile</b> source &key anchored)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Usage: (regex-compile <expression> [ :anchored (t/nil) ])
+       This function take a regular expression (supplied as source) and
+       compiles this into a lambda list that a string argument can then
+       be applied to.  It is also possible to compile this lambda list
+       for better performance or to save it as a named function for later
+       use</blockquote><p>(<b>remove-keyword-arg</b> keyword input-list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>from a set of keyword arguments, remove a particular pair marked by
+the passed keyword, i.e.  (remove-keyword-arg :a '(:b 2 :a 3 :d 7))
+-> (:b 2 :d 7). Return multiple values, the first being the new list,
+the second being the argument to the keyword removed, and the third
+indicating if there were a removal (useful if the second value is
+null).</blockquote><p>(<b>remove-n</b> list n)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Remove the nth element (0-based) of the list. Non-destructive.</blockquote><p>(<b>report-version</b> &optional depth (initialization-list (quote *cl-lib-version-reporter-initializations*)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>If depth is non-nil, then part names of the form foo-bar-bletch are suppressed at depth > 2. (using prefixes).</blockquote><p>(<b>reset-initializations</b> initialization-list-name)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Sets the FLAG of each initialization on the passed list to NIL so it
+will be (re)run the next time initializations is called on it.</blockquote><p>(<b>reverse-alist</b> alist &key (test (function eql)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Takes an alist of uniqe keys and non-unique values, and returns an
+alist of unique keys based on the values, whose values are lists of
+the original keys.</blockquote><p><b>RLIST-TO-SCHEME-STREAM</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>round-off</b> n &optional (sig 0))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>rounds n off to sig significant figures (positive is right of decimal, negative is left), returning a float.</blockquote><p>(<b>round-to</b> number &optional (divisor 1))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like Round, but returns the resulting number</blockquote><p>(<b>safe-dequeue</b> q)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Dequeue that makes sure there is a non-empty queue, returning NIL
+if queue is empty. (dequeue on empty queue will screw the data
+structure!)</blockquote><p><b>SCHEME-DELAY</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-DELAY-P</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-FORCE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-STREAM</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-STREAM-HEAD</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-STREAM-P</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-STREAM-TAIL</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SCHEME-STREAM-TAIL-CLOSURE-P</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SEQ-BUTLAST</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SEQ-LAST</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SET-SYNTAX</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>SLOT-FOR-INITARG</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>some-dotted-list</b> fn &rest lists)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like normal Some, but handles a single dotted list, and will apply
+the fn to the dotted argument, unless it is NIL</blockquote><p>(<b>ss-head</b> stream)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Return the head of scheme stream Stream. If Stream is not a stream,
+returns NIL (to allow the usual car of nil).</blockquote><p>(<b>ss-tail</b> stream)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Return the tail of the scheme stream Stream. Invokes lazy
+evaluation if needed.  If stream is not a scheme stream, return NIL
+(allows the usual cdr of nil).</blockquote><p>(<b>tailpush</b> item list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Pushes ITEM onto the tail of LIST. Does not work if the list is null.</blockquote><p>(<b>true-list-p</b> term)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns t if the term is a non-dotted list. Note that nil is a true list.</blockquote><p>(<b>truncate-keywords</b> input-list)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Many functions take multiple arguments, via &rest, that can cause
+   problems when keyword arguments are also supplied. This function
+   truncates a list at the first top-level keyword. Thus, '(A B C :FOO D)
+   is returned as (A B C). Note that the new list is freshly consed to 
+   avoid any stack problems with destroying a &rest argument.</blockquote><p>(<b>update-alist</b> item value alist &key (test (quote (function eql))) (key (quote (function identity))))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>If alist already has a value for Key, it is updated to be Value. 
+   Otherwise the passed alist is updated with key-value added as a new pair.</blockquote><p>(<b>update-alist-alist</b> outer-item inner-item inner-item-value alist-alist &key (outer-test (quote (function eql))) (inner-test (quote (function eql))) (outer-key (quote (function identity))) (inner-key (quote (function identity))))&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Alists of alists comes up so often in my code, I've decided to just macroize it.
+They're great for cheap and dirty (early pass) KBs, where the outer item is the object id and the inner-item is an attribute, 
+retrieving the value of the attribution on the object.</blockquote><p>(<b>variablep</b> item)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Returns T if ITEM is a variable, namely a symbol of the form ?NAME,
+   whose first character is a question-mark.</blockquote><p><b>VERSION-REPORTER</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>warn-or-error</b> item checklist continue-control-string proceed-control-string format-control-string &rest format-args)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Like Warn, returns non-nil if the user wishes to continue. A nil return implies failure.
+A bit snazzier than just WARN or CERROR, this function does a warning, and then asks if the user wants to go ahead 
+ (continue-control-string), error out, or go ahead and not ask again. Item and checklist is supplied by the
+caller for just this functionality: if item is found on checklist, Warn-or-Error will return non-nil.</blockquote><p>(<b>while</b> test &body body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Keeps invoking the body while the test is true;
+   test is tested before each loop.</blockquote><p>(<b>while-not</b> test &body body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Keeps invoking the body while the test is false;
+   test is tested before each loop.</blockquote><p>(<b>with-rhyme</b> body)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Well, there must be rhyme OR reason, and we now admit there is no
+reason, so...  Used to flag silly constructs that may need to be
+rewritten for best effect.</blockquote><p><b>WITH-SYNTAX</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p>(<b>xor</b> &rest predicates)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>True only if exactly one predicate is true. Short circutes when it
+finds a second one is true. Returns the true predicate</blockquote><font size=-1><p>Documentation generated by <a href="http://homepage.mac.com/svc/lispdoc/">lispdoc</a> running on LispWorks</p></font></body></html>
