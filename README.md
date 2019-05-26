@@ -1,6 +1,6 @@
-#CL-LIB: A library of common functions and packages for Common Lisp
+# CL-LIB: A library of common functions and packages for Common Lisp
 
-##### README.md Time-stamp: <2019-04-20 12:21:37 Bradford Miller(on Aragorn.local)>
+##### README.md Time-stamp: <2019-05-26 12:37:37 Bradford Miller(on Aragorn.local)>
 
 This version is an update of one distributed under the CMU AI Library,
 the URCS ftp, and my own page at
