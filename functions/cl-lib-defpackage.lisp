@@ -195,10 +195,3 @@
            #:clear-slot-value-cache)
   (:documentation "See the file 'Extending CLOS with Facets.doc' for extensive documentation."))
 
-#+5am
-(defpackage :CL-LIB-TESTS
-  (:shadowing-import-from :clos-facets
-                          #:defclass #:slot-makunbound #:slot-unbound #:slot-value #:slot-boundp #:unbound-slot
-                          #:slot-makunbound-using-class #:slot-value-using-class #:slot-boundp-using-class)
-
-  (:use :Common-lisp :it.bese.FiveAM :cl-lib :clos-facets))

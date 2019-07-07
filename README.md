@@ -1,22 +1,33 @@
 # CL-LIB: A library of common functions and packages for Common Lisp
 
-##### README.md Time-stamp: <2019-05-26 12:37:37 Bradford Miller(on Aragorn.local)>
+##### README.md Time-stamp: <2019-06-29 11:28:35 Bradford Miller(on Aragorn.local)>
 
-This version is an update of one distributed under the CMU AI Library,
-the URCS ftp, and my own page at
-<https://sites.google.com/site/bradfordwmiller/software>. It was originally distributed as part of the Association of Lisp Users web site when hosted at URCS.
+This version is a significant update of one distributed under the CMU
+AI Library, the URCS ftp, and my own page at
+<https://sites.google.com/site/bradfordwmiller/software>. It was
+originally distributed as part of the Association of Lisp Users web
+site when hosted at URCS.
 
-NB: LGPL license (see COPYING.LIB-3.0). 
+NB: LGPL license (see COPYING.LIB-3.0). The intent is that you can use
+it freely for your own systems even if it is commercial without the
+insidious copyleft applying to your code, but if you modify the
+library you should share your changes or fixes back to the community.
 
 ### Recent Changes:
 
 This new version for github has **asdf** (.asd) files, originally added for
-compatability with **SBCL** (used for roslisp).  Note that the older
+compatability with **SBCL** (e.g., used for roslisp).  Note that the older
 defsystem files may be found in the archive directory.
 
-In addition, a minimal set of tests have been added as a quick check for porting purposes.
+In addition, a minimal set of tests have been added as a quick check
+for porting purposes. These have not (yet) been extended to really
+check the full functionality of the individual packages, but are just
+a sanity check that nothing is severely broken.
 
-Note that certain lisp-implementation specific directories (as mentioned in the legacy README file) have been moved under the archive subdirectory and are no longer maintained as I no longer have access to current versions of these implementations (i.e. allegro and MCL).
+Note that certain lisp-implementation specific directories (as
+mentioned in the legacy README file) have been moved under the archive
+subdirectory and are no longer maintained as I no longer have access
+to current versions of these implementations (i.e. allegro and MCL).
 
 ## Usage
 
@@ -34,7 +45,9 @@ individual bits (see the .asd files) such as locatives or resources
 (both primarily created for compatibility with the Lisp Machines but
 useful in their own right) or everything with system **:cl-lib-all** .
 
-NB: you only need to compile once, after that loading (e.g. in your site-init, initialization file, etc.) is all that is needed until/unless you update to a newer version.
+NB: you only need to compile once, after that loading (e.g. in your
+site-init, initialization file, etc.) is all that is needed
+until/unless you update to a newer version.
 
 ## Caveats
 

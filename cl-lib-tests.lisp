@@ -1,7 +1,14 @@
-(in-package :cl-lib-tests)
-
 (cl-lib:version-reporter "CL-LIB-Tests" 5 16 ";; Time-stamp: <2019-03-16 13:05:21 Bradford Miller(on Aragorn.local)>" 
                          "5am testing initializations")
+
+(defpackage :CL-LIB-TESTS
+  (:shadowing-import-from :clos-facets
+                          #:defclass #:slot-makunbound #:slot-unbound #:slot-value #:slot-boundp #:unbound-slot
+                          #:slot-makunbound-using-class #:slot-value-using-class #:slot-boundp-using-class)
+
+  (:use :Common-lisp :it.bese.FiveAM :cl-lib :clos-facets))
+
+(in-package :cl-lib-tests)
 
 ;; 5.16 3/1/19 New!
 
@@ -38,13 +45,13 @@
   ;(clos-facets::facet-tester t) 
 
   ;; package defined in cl-lib-locatives.asd
-  (cl-lib:test-setters) ; nether does this
+  (cl-lib::test-setters) ; nether does this
   ;; attempt a 5am version
   (run! 'locatives)
 
   ;; package defined in cl-lib-resources.asd
   (run! 'resources-tests)
   
-  (lispdosc::generate-docfiles)) ; not really a test, but generates the documentation needed for a release
+  (lispdoc::generate-docfiles)) ; not really a test, but generates the documentation needed for a release
 
 

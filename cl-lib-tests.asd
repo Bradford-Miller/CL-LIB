@@ -1,4 +1,4 @@
-;; Time-stamp: <2019-02-17 15:39:23 Bradford Miller(on Aragorn.local)>     
+;; Time-stamp: <2019-07-07 13:36:32 Bradford Miller(on Aragorn.local)>     
 
 ;; This portion of CL-LIB Copyright (C) 2019 Bradford W. Miller
 ;; 
@@ -24,5 +24,6 @@
      (:module "packages"
               :serial t
               :components
-              ((:file "initializations-tests" )))))
+              ((:file "initializations-tests" )
+               (:file "clos-facets-tests")))))
 

@@ -39,4 +39,7 @@
             :depends-on (PACKAGE-DEF "packages")
             :components
             ((:file "cl-lib-essentials")
-             (:file "cl-extensions" :depends-on ("cl-lib-essentials")))))) ;; moved here because of sbcl 
+             ;; moved here because of sbcl 
+             (:file "cl-extensions" :depends-on ("cl-lib-essentials"))
+             (:file "clos-extensions" :depends-on ("cl-extensions"))
+             ))))
