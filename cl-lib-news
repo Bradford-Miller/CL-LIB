@@ -1,6 +1,7 @@
-;; Time-stamp: <2019-02-23 11:36:57 Bradford Miller(on Aragorn.local)>
+;; Time-stamp: <2019-10-19 13:43:39 Bradford Miller(on Aragorn.local)>
 
-.; 5.16. - 2/18/19 by miller Start to add FiveAM tests to allow automated regression testing, particularly for
+;; 5.17p -10/19/19 by miller Add lispworks specific (gc aware) code to resources
+;; 5.16  - 2/18/19 by miller Start to add FiveAM tests to allow automated regression testing, particularly for
 ;;                             packages (rather than individual functions). FiveAM is NOT required
 ;;                             to use CL-LIB, however, if it is loaded, before CL-LIB is,
 ;;                             you will be able to run the regression

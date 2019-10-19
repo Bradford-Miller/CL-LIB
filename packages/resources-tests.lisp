@@ -1,6 +1,6 @@
 (in-package CL-LIB)
 
-(cl-lib:version-reporter "CL-LIB-Resources Tests" 5 16 ";; Time-stamp: <2019-03-02 11:32:11 Bradford Miller(on Aragorn.local)>" 
+(cl-lib:version-reporter "CL-LIB-Resources Tests" 5 17 ";; Time-stamp: <2019-10-19 14:04:18 Bradford Miller(on Aragorn.local)>" 
                          "new")
 
 ;; 5.16. 2/17/19 5am testing (new)
@@ -20,18 +20,15 @@
 
 ;; miller - Brad Miller (bradfordmiller@mac.com)
 
-(def-suite resources-tests :description "Test suite for resources package")
+(5am:def-suite resources-tests :description "Test suite for resources package")
 
-(in-suite resources-tests)
+(5am:in-suite resources-tests)
 
 ;; following the API spec from resources.lisp.
 
 ;; for the purposes of testing, we will create two kinds of resources, one without args (homogenious resource)
 ;; and one with two arguments. The former will cons up vectors of a fixed size, and the latter will cons up arrays of
 ;; the specified dimensions.
-
-(defresource (test-fixed-resource () :initial-copies 5 :initializer clear-fixed-resource)
-    (make-array (list 5) :element-type t :initial-element nil))
 
 (defun clear-fixed-resource (r)
   (setf (aref r 0) nil)
@@ -40,7 +37,10 @@
   (setf (aref r 3) nil)
   (setf (aref r 4) nil))
 
-(test allocate-fixed-resources "Test that we can allocate the fixed resources, in excess of the pool"
+(defresource (test-fixed-resource () :initial-copies 5 :initializer clear-fixed-resource)
+    (make-array (list 5) :element-type t :initial-element nil))
+
+(5am:test allocate-fixed-resources "Test that we can allocate the fixed resources, in excess of the pool"
       (let ((foo1 (allocate-test-fixed-resource))
             (foo2 (allocate-test-fixed-resource))
             (foo3 (allocate-test-fixed-resource))
@@ -84,7 +84,7 @@
                          'test-fixed-resource))))
 
 ;;
-(test clear-fixed-resource
+(5am:test clear-fixed-resource
       (clear-test-fixed-resource)
       ;; should all be unallocated
       (map-resource #'(lambda (object in-use)
@@ -93,17 +93,15 @@
 
 ;; ok, now lets try the same with a variable resource. 
 
+(defun clear-variable-resource (r a1 a2)
+  (dotimes (i1 a1)
+    (dotimes (i2 a2)
+      (setf (aref r i1 i2) 0))))
+
 (defresource (test-variable-resource (a1 a2) :initializer clear-variable-resource)
-    (make-array (a1 a2) :element-type t :initial-element 0))
+    (make-array (list a1 a2) :element-type t :initial-element 0))
 
-(defun clear-variable-resource (r)
-  (let ((a1 (array-dimension r 0))
-        (a2 (array-dimension r 1)))
-    (dotimes (i1 a1)
-      (dotimes (i2 a2)
-        (setf (aref r i1 i2) 0)))))
-
-(test allocate-variable-resources "Test that we can allocate the variable resources, in excess of the pool"
+(5am:test allocate-variable-resources "Test that we can allocate the variable resources, in excess of the pool"
       (let ((foo1 (allocate-test-variable-resource 2 3))
             (foo2 (allocate-test-variable-resource 3 2))
             (foo3 (allocate-test-variable-resource 4 3))
@@ -158,7 +156,7 @@
                          'test-variable-resource))))
 
 ;;
-(test clear-variable-resource
+(5am:test clear-variable-resource
       (clear-test-variable-resource)
       ;; should all be unallocated
       (map-resource #'(lambda (object in-use)
