@@ -1,4 +1,4 @@
-;; Time-stamp: <2019-07-07 13:36:32 Bradford Miller(on Aragorn.local)>     
+;; Time-stamp: <2019-10-26 18:16:47 Bradford Miller(on Aragorn.local)>     
 
 ;; This portion of CL-LIB Copyright (C) 2019 Bradford W. Miller
 ;; 
@@ -21,7 +21,12 @@
     :depends-on (:cl-lib-all :fiveam)
     :components
     ((:file "cl-lib-tests")
+     (:module "functions"
+              :serial t
+              :components
+              ((:file "cl-lib-function-tests")))
      (:module "packages"
+              :depends-on ("functions") ; macro definition
               :serial t
               :components
               ((:file "initializations-tests" )

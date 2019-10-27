@@ -1,10 +1,11 @@
 (in-package cl-lib-tests)
 
-(version-reporter "CL-LIB-Func Tests" 5 16
-                  ";; Time-stamp: <2019-03-23 21:16:27 Bradford Miller(on Aragorn.local)>"
+(version-reporter "CL-LIB-Func Tests" 5 17
+                  ";; Time-stamp: <2019-10-26 18:18:28 Bradford Miller(on Aragorn.local)>"
                   ";; new 5am testing")
 
-;; 5.16. 3/16/19 5am testing (new)
+;; 5.17  10/26/19 move etest here so we don't have problems later; fix various typos
+;; 5.16.  3/16/19 5am testing (new)
 
 ;;; Copyright (C) 2019 by Bradford W. Miller, bradfordmiller@mac.com
 ;;;
@@ -24,6 +25,12 @@
 ;; tests for a number of the functions in this directory, to help with github releases.
 ;; note that packages have tests either as part of their package or in that directory.
 
+;; used later
+(defmacro etest (expected-error error-generator)
+  `(handler-case ,error-generator
+     (,expected-error (condition) (declare (ignore condition)) t) ; had an error so OK
+     (:no-error (condition) (declare (ignore condition)) nil))) ; fail
+
 (def-suite function-tests :description "Test suite for cl-lib functions")
 
 (in-suite function-tests)
@@ -34,7 +41,7 @@
   "test fns in the cl-array-fns file"
 
   (let ((foo (list '(a b) '(c d) '(e f)))
-        ((a1 (make-array (2 3) :initial-contents foo)))
+        (a1 (make-array '(2 3) :initial-contents foo))
         a2)
              
     (is (Prefix? "foobar" "foobarbletch"))
@@ -51,16 +58,16 @@
   (flags 0 :type fixnum))
 
 (defflags boolean-test-term
-    frotz-p
-    bletch-p)
+    frotz
+    bletch)
 
 (test boolean-fns
   "test fns in the cl-boolean file"
   (let ((aaa (make-boolean-test-term)))      
-    (setf (frotz-p aaa) t)
-    (setf (bletch-p aaa) nil)
-    (is (frotz-p aaa))
-    (is (not (bletch-p aaa))))
+    (setf (boolean-test-term-frotz-p aaa) t)
+    (setf (boolean-test-term-bletch-p aaa) nil)
+    (is (boolean-test-term-frotz-p aaa))
+    (is (not (boolean-test-term-bletch-p aaa))))
   (is (xor (= 2 3) (= 4 4) (= 7 9)))
   (is (not (xor (= 2 3) (= 4 4) (= 7 9) (= 8 8))))
   (is (eqv (+ 2 3) (+ 3 2) (+ 4 1) (+ 1 4)))
@@ -83,7 +90,7 @@
     (is (let-maybe nil ((foo t)) (not foo)))
     
     ;; while
-    (while (count < 100)
+    (while (< count 100)
       (incf count))
     (is (= count 100))
     
@@ -93,8 +100,8 @@
     (is (= count 0))
     
     ;; let*-non-null
-    (is (let*-non-null ((a t) (b 12) (c 42)) c))
-    (is (not (let*-non-null ((a t) (b 12) (d nil) (c 42)) c)))
+    (is (= (let*-non-null ((a t) (b 12) (c 42)) c) 42))
+    (is (null (let*-non-null ((a t) (b 12) (d nil) (c 42)) c)))
     ;; msetq (trivial)
     ;; mlet (trivial)
     ;; cond-binding-predicate-to
@@ -161,9 +168,9 @@
     ;; reverse-alist
     (is (eql (cadr (assoc 'f (reverse-alist a))) 'e)))
   ;; alistify
-  (is (equalp (alistify 'foo 'bar 'bletch 'quux) '((foo bar) (bletch quux))))
+  (is (equalp (alistify '(foo bar bletch quux)) '((foo . bar) (bletch . quux))))
   ;; de-alistify
-  (is (equalp (dealistify '((foo bar) (bletch quux))) '(foo (bar) bletch (quux))))
+  (is (equalp (de-alistify '((foo bar) (bletch quux))) '(:foo (bar) :bletch (quux))))
   ;; tail-equalp
   (is (tail-equalp '(f g) '(a b c d e f g)))
   (is (not (tail-equalp '(f g) '(a b c d e f g h))))
@@ -234,12 +241,12 @@
     
     ;; list-without-nulls
     (setq result-a (list-without-nulls test-list-a))
-    (is (not (every-dotted-list #'identiy test-list-a)))
+    (is (not (every-dotted-list #'identity test-list-a)))
     (is (every-dotted-list #'identity result-a)) ; no nulls in top level list
     
-    ;; cartesion-product
+    ;; cartesian-product
     ;; check the set difference is equal to the cross product (because just two lists)
-    (is (null (set-difference (cartesion-product '(a b) '(c d)) (cross-product '(a b) '(c d)))))
+    (is (null (set-difference (cartesian-product '(a b) '(c d)) (cross-product '(a b) '(c d)))))
     ;; more general cross-product
     (is (null (set-difference (cross-product '(c d) '(e f) '(a b)) 
                               (cross-product '(a b) '(c d) '(e f)))))

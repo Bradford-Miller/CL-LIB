@@ -1,7 +1,7 @@
 (in-package :clos-facets)
 
-(cl-lib:version-reporter "CL-LIB-CLOS-Facets-Tests" 5 16 
-                         ";; Time-stamp: <2011-10-21 10:34:55 millerb>" 
+(cl-lib:version-reporter "CL-LIB-CLOS-Facets-Tests" 5 17 
+                         ";; Time-stamp: <2019-10-26 18:14:11 Bradford Miller(on Aragorn.local)>" 
                          "CVS: $Id: clos-facets-tests.lisp,v 1.3 2011/11/04 14:10:52 gorbag Exp $
 ;; development - note warnings on compile are OK")
 
@@ -18,13 +18,19 @@
 ;; You should have received a copy of the GNU Lesser General Public License along with this library; 
 ;; if not, see <http://www.gnu.org/licenses/>.
 
-;; test facets library
+;; 5.17 10/26/19 Move definitions to cl-lib-tests package instead of
+;;               clos-facets (note that the package should support that)
 
-(deftype hack-valid-symbol () (member 'a 'b 'c 'd 'e))
+;; test facets library
 
 ;; some hack classes that illustrate facet uasage
 
 ;; mumble lets us test the basics: value-type and multiple slot-values.
+
+;; convert to 5am 3/3/19 BWM
+(in-package :cl-lib-tests)
+
+(deftype hack-valid-symbol () (member 'a 'b 'c 'd 'e))
 
 (defclass mumble ()
   ((mumble-slota :initarg :a :accessor slota :value-type hack-valid-symbol) ; check value-type
@@ -32,9 +38,6 @@
                  :slot-values :single :value-type hack-valid-symbol)
    ;; check many-values
    (mumble-slotc :initarg :c :accessor slotc :slot-values :multiple :value-type hack-valid-symbol)))
-
-;; convert to 5am 3/3/19 BWM
-(in-package :cl-lib-tests)
 
 ;; someplace to put instances we will create
 (defvar *frotz* ())
@@ -60,15 +63,10 @@
 
 (defvar *mumble* )
 
-(defmacro etest (expected-error error-generator)
-  `(handler-case ,error-generator
-     (,expected-error () t) ; had an error so OK
-     (:no-error () nil))) ; fail
-
 (test basic-facet
-  (setq *mumble* (make-instance 'clos-facets::mumble :a 'a :b 'b))
-  (is (equal (clos-facets::slota *mumble*) 'a))
-  (is (equal (clos-facets::slotb-reader *mumble*) 'b)))
+  (setq *mumble* (make-instance 'cl-lib-tests::mumble :a 'a :b 'b))
+  (is (equal (cl-lib-tests::slota *mumble*) 'a))
+  (is (equal (cl-lib-tests::slotb-reader *mumble*) 'b)))
 
 (test facet-access
   (slotb-writer 'e *mumble*)
@@ -83,21 +81,21 @@
   (setf (slotc *mumble*) 'c)
   (is (slot-boundp *mumble* 'mumble-slotc 2))
   (is (slot-boundp *mumble* 'mumble-slotc 0))
-  (is (equal (slotc *mumble* 0) 'a))
+  (is (equal (slotc *mumble* 0) 'c))
   (is (equal (slotc *mumble* 1) 'b))
-  (is (equal (slotc *mumble* 2) 'c))
-  (is (equal (slot-value *mumble* 'mumble-slotc 2) 'c)))
+  (is (equal (slotc *mumble* 2) 'a))
+  (is (equal (slot-value *mumble* 'mumble-slotc 2) 'a)))
 
 (test facet-multi-value-change
   (setf (slotc *mumble* 1) 'd)
-  (is (equal (slotc *mumble* 0) 'a))
+  (is (equal (slotc *mumble* 0) 'c))
   (is (equal (slotc *mumble* 1) 'd))
-  (is (equal (slotc *mumble* 2) 'c)))
+  (is (equal (slotc *mumble* 2) 'a)))
 
 (test facet-multi-value-unbind-one
   (slot-makunbound *mumble* 'mumble-slotc 0)
   (is (equal (slotc *mumble* 0) 'd))
-  (is (equal (slotc *mumble* 1) 'c))
+  (is (equal (slotc *mumble* 1) 'a))
   (is (etest unbound-slot (slotc *mumble* 2))))
 
 (test facet-value-type-errors

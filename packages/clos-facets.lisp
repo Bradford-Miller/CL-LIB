@@ -1,9 +1,10 @@
-(cl-lib:version-reporter "CL-LIB-CLOS-Facets" 5 16 ";; Time-stamp: <2019-03-03 17:50:26 Bradford Miller(on Aragorn.local)>" 
+(cl-lib:version-reporter "CL-LIB-CLOS-Facets" 5 17 ";; Time-stamp: <2019-10-27 16:39:13 Bradford Miller(on Aragorn.local)>" 
                          "CVS: $Id: clos-facets.lisp,v 1.2 2008/05/03 17:42:02 gorbag Exp $
 ;; documentation")
 
-;; 5.16  3/ 3/19 finish implementation of multiple values (to pass tests)
-;; 0.3   5/18/07 parial implementation of multiple values
+;; 5.17  10/27/19 minor fixes to 5.16
+;; 5.16   3/ 3/19 finish implementation of multiple values (to pass tests)
+;; 0.3    5/18/07 parial implementation of multiple values
 
 ;; This portion of CL-LIB Copyright (C) 2003-2019 Bradford W. Miller
 ;; 
@@ -442,7 +443,7 @@ for it."))
 ;; Note that for the most part, facets should not require such "deep" support, however, in this case the functions need 
 ;; to take the additional "place" argument, preventing simply, e.g., adding methods for slot-value.
 ;;
-;; Mutliple values are represented using lists of values. The first in the list is the last one written 
+;; Multiple values are represented using lists of values. The first in the list is the last one written 
 ;; (that is, they appear in reverse order), and the 0th place is therefore the last element of the list.
 ;; (This implementation is subject to some debate, but at least in my own code, I found that the last place was the most frequently
 ;; accessed, thus the preference of putting it first in the list to make it the easiest to get to).
@@ -471,10 +472,9 @@ for it."))
        (handler-case (pop (clos:slot-value-using-class class instance slot-name))
          (unbound-slot ()))) ; we don't care if it's already unbound
       (t
-       ;; find the particular value and delete it, counting from the end
-       (handler-case  (let* ((values (clos:slot-value-using-class class instance slot-name))
-                             (n (- (list-length values) place 1)))
-                        (setf (clos:slot-value-using-class class instance slot-name) (delete-n values n)))
+       ;; find the particular value and delete it
+       (handler-case  (let ((values (clos:slot-value-using-class class instance slot-name)))
+                        (setf (clos:slot-value-using-class class instance slot-name) (delete-n values place)))
          (unbound-slot ())))))) ; if the slot is unbound, so is this place
 
 
@@ -494,16 +494,24 @@ The default method signals an error of condition type unbound-slot (with slots :
   (:documentation "Implementation for slot-value and setf of slot-value."))
 
 (defmethod slot-value-using-class ((class t) object slot-name &optional place)
-  (if (and place (multiple-slot-values-p class object slot-name))
+  (cond 
+   ((and place (multiple-slot-values-p class object slot-name))
     (if (slot-boundp-using-class class object slot-name place)
       (nth place (common-lisp:slot-value object slot-name))
-      (slot-unbound class object slot-name place))
-    (common-lisp:slot-value object slot-name)))
+      (slot-unbound class object slot-name place)))
+   ((multiple-slot-values-p class object slot-name)
+    ;; just return the first place
+    (if (slot-boundp-using-class class object slot-name 0)
+      (car (common-lisp:slot-value object slot-name))
+      (slot-unbound class object slot-name place)))
+   (t
+    (common-lisp:slot-value object slot-name))))
 
 (defmethod (setf slot-value-using-class) (new-value (class t) object slot-name &optional place)
   (flet ((do-set (new)
            (if (common-lisp:slot-boundp object slot-name)
-             (nconc (common-lisp:slot-value object slot-name) (list new))
+             (setf (common-lisp:slot-value object slot-name)
+                   (nconc (list new) (common-lisp:slot-value object slot-name))) ; add to beginning of list (see comments above) 10/26/19
              (setf (common-lisp:slot-value object slot-name) (list new)))))
 
     (cond

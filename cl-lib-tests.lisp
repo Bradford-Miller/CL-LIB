@@ -1,4 +1,4 @@
-(cl-lib:version-reporter "CL-LIB-Tests" 5 16 ";; Time-stamp: <2019-03-16 13:05:21 Bradford Miller(on Aragorn.local)>" 
+(cl-lib:version-reporter "CL-LIB-Tests" 5 17 ";; Time-stamp: <2019-10-27 10:47:35 Bradford Miller(on Aragorn.local)>" 
                          "5am testing initializations")
 
 (defpackage :CL-LIB-TESTS
@@ -10,7 +10,8 @@
 
 (in-package :cl-lib-tests)
 
-;; 5.16 3/1/19 New!
+;; 5.17 10/26/19 Typo in comments
+;; 5.16  3/ 1/19 New!
 
 ;;; Copyright (C) 2019 by Bradford W. Miller (bradfordmiller@mac.com)
 
@@ -40,13 +41,12 @@
   ;; package defined in cl-lib-essentials.asd
   (run! 'initialization-tests)
 
-  ;; backage-defined-in cl-lib-clos-facets.asd
+  ;; package-defined-in cl-lib-clos-facets.asd
   (run! 'facet-tests)
   ;(clos-facets::facet-tester t) 
 
   ;; package defined in cl-lib-locatives.asd
-  (cl-lib::test-setters) ; nether does this
-  ;; attempt a 5am version
+  ;;  (cl-lib::test-setters) ; old version (pre-5am)
   (run! 'locatives)
 
   ;; package defined in cl-lib-resources.asd

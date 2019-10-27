@@ -1,10 +1,11 @@
 ;; if FiveAM is loaded, then set up some tests.
 
 (in-package :cl-lib-tests)
-(cl-lib:version-reporter "CL-LIB-Initializations Tests" 5 16 ";; Time-stamp: <2019-03-01 16:56:12 Bradford Miller(on Aragorn.local)>" 
+(cl-lib:version-reporter "CL-LIB-Initializations Tests" 5 17 ";; Time-stamp: <2019-10-26 20:28:02 Bradford Miller(on Aragorn.local)>" 
                          "5am testing")
 
-;; 5.16. 2/17/19 5am testing (new)
+;; 5.17   10/26/19 make sure we generate a new initialization name each time we run the test
+;; 5.16.   2/17/19 5am testing (new)
 
 ;; This portion of CL-LIB Copyright (C) 2019 Bradford W. Miller
 ;; 
@@ -32,22 +33,30 @@
 
 (test init-once
   "test that :once initialization runs once (by name)"
-  (setq *test-var* 0)
-  (add-initialization "test1" '(setq *test-var* 1) '(:once))
-  (is (= 1 *test-var*))
-  (add-initialization "test1" '(setq *test-var* 2) '(:once))
-  (is (= 1 *test-var*)))
+  (let ((test-name (string (gensym "test-init-once"))))
+    (setq *test-var* 0)
+    (add-initialization test-name '(setq *test-var* 1) '(:once))
+    (is (= 1 *test-var*))
+    (add-initialization test-name '(setq *test-var* 2) '(:once))
+    (is (= 1 *test-var*))))
 
 (test init-lists
   "test that user initialization lists work"
-  (setq *test-var* 40)
-  (add-initialization "a hack" '(incf *test-var* 2) () '*test-init-list*)
-  (is (= 40 *test-var*))
-  (initializations '*test-init-list*)
-  (is (= 42 *test-var*))
-  (initializations '*test-init-list*)
-  (is (= 42 *test-var*))
-  (reset-initializations '*test-init-list*)
-  (is (= 42 *test-var*))
-  (initializations '*test-init-list*)
-  (is (= 44 *test-var*)))
+  (let ((test-name (string (gensym "test-init-lists"))))
+    (setq *test-var* 40)
+    (add-initialization test-name '(incf *test-var* 2) () '*test-init-list*)
+
+    ;; haven't run initializations yet, so should be 40
+    (is (= 40 *test-var*))
+    (initializations '*test-init-list*)
+
+    ;; now incremented
+    (is (= 42 *test-var*))
+    (initializations '*test-init-list*)
+
+    ;; since we haven't reset, it shouldn't run a second time
+    (is (= 42 *test-var*))
+    (reset-initializations '*test-init-list*)
+    (is (= 42 *test-var*))
+    (initializations '*test-init-list*)
+    (is (= 44 *test-var*))))
