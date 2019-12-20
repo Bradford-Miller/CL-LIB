@@ -1,7 +1,7 @@
 (in-package :clos-facets)
 
 (cl-lib:version-reporter "CL-LIB-CLOS-Facets-Tests" 5 17 
-                         ";; Time-stamp: <2019-10-26 18:14:11 Bradford Miller(on Aragorn.local)>" 
+                         ";; Time-stamp: <2019-11-08 16:41:54 Bradford Miller(on Aragorn.local)>" 
                          "CVS: $Id: clos-facets-tests.lisp,v 1.3 2011/11/04 14:10:52 gorbag Exp $
 ;; development - note warnings on compile are OK")
 
@@ -69,12 +69,14 @@
   (is (equal (cl-lib-tests::slotb-reader *mumble*) 'b)))
 
 (test facet-access
+  (setq *mumble* (make-instance 'cl-lib-tests::mumble :a 'a :b 'b))
   (slotb-writer 'e *mumble*)
   (setf (slota *mumble*) 'd)
   (is (equal (slota *mumble*) 'd))
   (is (equal (slotb-reader *mumble*) 'e)))
 
 (test facet-multi-value
+  (setq *mumble* (make-instance 'cl-lib-tests::mumble :a 'a :b 'b))
   ;;fill up the multi-value slot
   (setf (slotc *mumble*) 'a)
   (setf (slotc *mumble*) 'b)
@@ -84,21 +86,18 @@
   (is (equal (slotc *mumble* 0) 'c))
   (is (equal (slotc *mumble* 1) 'b))
   (is (equal (slotc *mumble* 2) 'a))
-  (is (equal (slot-value *mumble* 'mumble-slotc 2) 'a)))
-
-(test facet-multi-value-change
+  (is (equal (slot-value *mumble* 'mumble-slotc 2) 'a))
   (setf (slotc *mumble* 1) 'd)
   (is (equal (slotc *mumble* 0) 'c))
   (is (equal (slotc *mumble* 1) 'd))
-  (is (equal (slotc *mumble* 2) 'a)))
-
-(test facet-multi-value-unbind-one
+  (is (equal (slotc *mumble* 2) 'a))
   (slot-makunbound *mumble* 'mumble-slotc 0)
   (is (equal (slotc *mumble* 0) 'd))
   (is (equal (slotc *mumble* 1) 'a))
   (is (etest unbound-slot (slotc *mumble* 2))))
 
 (test facet-value-type-errors
+  (setq *mumble* (make-instance 'cl-lib-tests::mumble :a 'a :b 'b))
   (is (etest value-type-error (slotb-writer 'g *mumble*)))
   (is (etest value-type-error (setf (slota *mumble*) 7)))
   (is (etest value-type-error (setf (slotc *mumble*) 9)))

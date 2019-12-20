@@ -3,12 +3,13 @@
 (defpackage :cl-lib-essentials (:use common-lisp :cl-lib-initializations)  (:export #:macro-indent-rule #:version-reporter #:detailed-version-reporter #:report-version #:interactive-lisp-p #:*cl-lib-version-announce-p* #:*cl-lib-version-reporter-string* #:*cl-lib-detailed-version-reporter-string*) (:documentation "Essential functions for implementing the cl-lib"))
 
 (defparameter *cl-lib-defpackage-version*  '(cl-lib-essentials:version-reporter "CL-LIB-Defpackage" 5 16 
-                                             ";; Time-stamp: <2019-03-03 17:52:23 Bradford Miller(on Aragorn.local)>" 
+                                             ";; Time-stamp: <2019-11-08 16:16:19 Bradford Miller(on Aragorn.local)>" 
                                              "CVS: $Id: cl-lib-defpackage.lisp,v 1.7 2011/12/17 03:14:07 millerb Exp $
 ;; FiveAM"))
 
 ;; the ugliness above (putting the defpackages first) is to support the auto-update of the timestamp on the file (default top 5 lines).
 
+;; 5.17 11/ 8/19 occurs wasn't exported?!
 ;; 5.16  2/16/19 Start to add FiveAM testing capabilities
 ;; 5.14 12/16/11 detailed-version-reporter
 ;; 5.13 10/19/11 use lispworks' version of dotted-list-p
@@ -76,7 +77,7 @@
    
    ;;           cl-sets.lisp
    #:list-without-nulls #:cartesian-product #:cross-product 
-   #:permutations #:powerset #:circular-list
+   #:permutations #:powerset #:circular-list #:occurs
 
    #:seq-butlast #:seq-last #:dosequence
    #:prefix?

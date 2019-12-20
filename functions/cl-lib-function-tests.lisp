@@ -1,7 +1,7 @@
 (in-package cl-lib-tests)
 
 (version-reporter "CL-LIB-Func Tests" 5 17
-                  ";; Time-stamp: <2019-10-26 18:18:28 Bradford Miller(on Aragorn.local)>"
+                  ";; Time-stamp: <2019-11-08 16:17:07 Bradford Miller(on Aragorn.local)>"
                   ";; new 5am testing")
 
 ;; 5.17  10/26/19 move etest here so we don't have problems later; fix various typos
@@ -28,7 +28,7 @@
 ;; used later
 (defmacro etest (expected-error error-generator)
   `(handler-case ,error-generator
-     (,expected-error (condition) (declare (ignore condition)) t) ; had an error so OK
+     (,expected-error (condition) (declare (ignore condition)) t) ; had the expected error so OK
      (:no-error (condition) (declare (ignore condition)) nil))) ; fail
 
 (def-suite function-tests :description "Test suite for cl-lib functions")
@@ -40,9 +40,9 @@
 (test array-fns
   "test fns in the cl-array-fns file"
 
-  (let ((foo (list '(a b) '(c d) '(e f)))
-        (a1 (make-array '(2 3) :initial-contents foo))
-        a2)
+  (let* ((foo (list '(a b) '(c d) '(e f)))
+         (a1 (make-array '(2 3) :initial-contents foo))
+         a2)
              
     (is (Prefix? "foobar" "foobarbletch"))
     (is (not (Prefix? "foo123" "foo321ccd")))
@@ -106,7 +106,7 @@
     ;; mlet (trivial)
     ;; cond-binding-predicate-to
     (is (= 49 (cond-binding-predicate-to foo
-                ((+ 17 31)
+                ((+ 18 31)
                  foo)
                 (t
                  foo))))
@@ -126,7 +126,7 @@
     ;; command-line-arg
     ;; getenv
     ;; if*
-    (is (= (if nil t 1 2 3) 3))
+    (is (= (if* nil t 1 2 3) 3))
     ;; make-variable
     (setq foo (make-variable "foo"))
     ;; variablep
@@ -188,7 +188,7 @@
   (is (eqmemb 'a 'a))
   (is (eqmemb 'a '(b c a d e)))
   ;; car-eq
-  (is (car-eq 'a '(a b c d e)))
+  (is (car-eq '(a b c d e) 'a))
   ;; dremove
   (let ((c '(a b c d e)))
     (dremove 'c c)
@@ -219,7 +219,7 @@
    ;; tbd
    (let ((test-list '(a b . c)))
      ;; mapc-dotted-list
-     ;; mapcar-dotted-list
+     ;; mapca
      (is (equalp test-list (mapcar-dotted-list #'identity test-list)))
      ;; mapcan-dotted-list
      ;; maplist-dotted-list
@@ -245,15 +245,15 @@
     (is (every-dotted-list #'identity result-a)) ; no nulls in top level list
     
     ;; cartesian-product
-    ;; check the set difference is equal to the cross product (because just two lists)
-    (is (null (set-difference (cartesian-product '(a b) '(c d)) (cross-product '(a b) '(c d)))))
+    (is (equalp (cartesian-product '(a b) '(c d)) '((b . d) (b . c) (a . d) (a . c))))
     ;; more general cross-product
     (is (null (set-difference (cross-product '(c d) '(e f) '(a b)) 
-                              (cross-product '(a b) '(c d) '(e f)))))
+                              (cross-product '(a b) '(c d) '(e f))
+                              :test #'set-difference))) ; because we are comparing subsets
     ;; permutations
     (is (= (length (permutations '(a b c))) 6))
     ;; powerset
-    (is (= (length (powerset '(a b c))) 7))
+    (is (= (length (powerset '(a b c))) 8)) ; 8 because nil is a subset too
     ;; circular-list
     (is (equalp (mapcar #'+ '(1 2 3 4 5) (circular-list 3)) '(4 5 6 7 8)))
     ;; occurs
