@@ -1,4 +1,4 @@
-(cl-lib:version-reporter "CL-LIB-Tests" 5 17 ";; Time-stamp: <2019-10-27 10:47:35 Bradford Miller(on Aragorn.local)>" 
+(cl-lib:version-reporter "CL-LIB-Tests" 5 18 ";; Time-stamp: <2020-01-04 17:12:45 Bradford Miller(on Aragorn.local)>" 
                          "5am testing initializations")
 
 (defpackage :CL-LIB-TESTS
@@ -6,14 +6,16 @@
                           #:defclass #:slot-makunbound #:slot-unbound #:slot-value #:slot-boundp #:unbound-slot
                           #:slot-makunbound-using-class #:slot-value-using-class #:slot-boundp-using-class)
 
-  (:use :Common-lisp :it.bese.FiveAM :cl-lib :clos-facets))
+  (:use :Common-lisp :it.bese.FiveAM :cl-lib :clos-facets)
+  (:export #:etest))
 
 (in-package :cl-lib-tests)
 
+;; 5.18  1/ 3/20 Fix some symbol/pacakge issues
 ;; 5.17 10/26/19 Typo in comments
 ;; 5.16  3/ 1/19 New!
 
-;;; Copyright (C) 2019 by Bradford W. Miller (bradfordmiller@mac.com)
+;;; Copyright (C) 2019, 2020 by Bradford W. Miller (bradfordmiller@mac.com)
 
 ;; This library is free software; you can redistribute it and/or modify it under the terms of the GNU 
 ;; Lesser General Public License as published by the Free Software Foundation; either version 3.0 of 
@@ -47,10 +49,10 @@
 
   ;; package defined in cl-lib-locatives.asd
   ;;  (cl-lib::test-setters) ; old version (pre-5am)
-  (run! 'locatives)
+  (run! 'cl-lib::locatives)
 
   ;; package defined in cl-lib-resources.asd
-  (run! 'resources-tests)
+  (run! 'cl-lib::resources-tests)
   
   (lispdoc::generate-docfiles)) ; not really a test, but generates the documentation needed for a release
 

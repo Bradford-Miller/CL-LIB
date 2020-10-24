@@ -1,14 +1,23 @@
 <html><head><title>CLOS-FACETS</title></head><body><h3>API for package CLOS-FACETS</h3>
-<blockquote>UNDOCUMENTED</blockquote>
+<blockquote>See the file 'Extending CLOS with Facets.doc' for extensive documentation.</blockquote>
 <p><b>cardinality-bounds-error</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
 <blockquote>Either fewer or more values have been declared than the bounds allow</blockquote><blockquote>Class precedence list: <tt> cardinality-bounds-error clos-facets-cell-error clos-facets-error cell-error error serious-condition condition standard-object t</tt></blockquote>
 <blockquote>Class init args: <tt> :name :new-value :operation :facet :class :instance</tt></blockquote>
 <p><b>cardinality-bounds-incompatible</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
 <blockquote>The cardinality bounds are not a proper subinterval of some ancestor declaration.</blockquote><blockquote>Class precedence list: <tt> cardinality-bounds-incompatible clos-facets-incompatible clos-facets-program-error clos-facets-error program-error error serious-condition condition standard-object t</tt></blockquote>
-<p><b>CARDINALITY-BOUNDS-OVERRUN</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
-<p><b>CARDINALITY-BOUNDS-UNDERRUN</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
-<p><b>CLEAR-SLOT-VALUE-CACHE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
-<p><b>CLOS-FACETS-CELL-ERROR</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>cardinality-bounds-overrun</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
+<blockquote>Too may values have been declared for the slot's cardinality</blockquote><blockquote>Class precedence list: <tt> cardinality-bounds-overrun cardinality-bounds-error clos-facets-cell-error clos-facets-error cell-error error serious-condition condition standard-object t</tt></blockquote>
+<blockquote>Class init args: <tt> :name :new-value :operation :facet :class :instance</tt></blockquote>
+<p><b>cardinality-bounds-underrun</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
+<blockquote>Too few values have been declared for the slot's cardinality</blockquote><blockquote>Class precedence list: <tt> cardinality-bounds-underrun cardinality-bounds-error clos-facets-cell-error clos-facets-error cell-error error serious-condition condition standard-object t</tt></blockquote>
+<blockquote>Class init args: <tt> :name :new-value :operation :facet :class :instance</tt></blockquote>
+<p>(<b>clear-slot-value-cache</b>)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>used to clear our cache of slot value values</blockquote><p><b>clos-facets-cell-error</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
+<blockquote>Specialization of cell-error for faceted slots. 
+The type cell-error consists of error conditions that occur during a location access. 
+The name of the offending cell is initialized by the :name initialization argument to make-condition, 
+and is accessed by the function cell-error-name.</blockquote><blockquote>Class precedence list: <tt> clos-facets-cell-error clos-facets-error cell-error error serious-condition condition standard-object t</tt></blockquote>
+<blockquote>Class init args: <tt> :name :new-value :operation :facet :class :instance</tt></blockquote>
 <p><b>clos-facets-error</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
 <blockquote>All clos-facets package related errors inherit from this condition</blockquote><blockquote>Class precedence list: <tt> clos-facets-error error serious-condition condition standard-object t</tt></blockquote>
 <p><b>clos-facets-incompatible</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
@@ -16,7 +25,8 @@
 some incompatibility (constraint conflict) with some other
 declaration. Generally this is due to some child class having a facet
 declaration that is not a proper subtype of an ancester class.</blockquote><blockquote>Class precedence list: <tt> clos-facets-incompatible clos-facets-error error serious-condition condition standard-object t</tt></blockquote>
-<p><b>CLOS-FACETS-PROGRAM-ERROR</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
+<p><b>clos-facets-program-error</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
+<blockquote>Specialization of program-error for facets</blockquote><blockquote>Class precedence list: <tt> clos-facets-program-error clos-facets-error program-error error serious-condition condition standard-object t</tt></blockquote>
 <p><b>clos-facets-warning</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
 <blockquote>All clos-facets package related warnings inherit from this warning</blockquote><blockquote>Class precedence list: <tt> clos-facets-warning warning condition standard-object t</tt></blockquote>
 <p>(<b>defclass</b> class-name superclass-names slot-specifiers &rest class-options)&nbsp;&nbsp;&nbsp;<i>function</i></p>
@@ -48,7 +58,10 @@ for instance, require that all decendants of a particular slot-name support mult
 <blockquote>Patterned on slot-missing - invoked when an attempt is made to access a facet in an object 
 where the name of the facet is not a name of a facet supported on that slot on that class. The default method signals
 an error (clos-facets-error). The generic function is not intended to be called by programmers. Programmers may write methods
-for it.</blockquote><p>(<b>facet-unbound</b> class instance slot-name facet-name)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
+for it.</blockquote><p><b>facet-missing-error</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
+<blockquote>Signalled when a facet was expected</blockquote><blockquote>Class precedence list: <tt> facet-missing-error clos-facets-cell-error clos-facets-error cell-error error serious-condition condition standard-object t</tt></blockquote>
+<blockquote>Class init args: <tt> :name :new-value :operation :facet :class :instance</tt></blockquote>
+<p>(<b>facet-unbound</b> class instance slot-name facet-name)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
 <blockquote>Patterned on slot-unbound - invoked when an unbound facet is read. The default method signals an error of type 
 unbound-facet. The generic function facet-unbound is not intended to be called by programmers, but programmers may write methods 
 for it.</blockquote><p><b>no-multiple-slotvalues</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
@@ -59,9 +72,9 @@ valued.</blockquote><blockquote>Class precedence list: <tt> no-multiple-slotvalu
 <blockquote>Class init args: <tt> :name :new-value :operation :facet :class :instance :place</tt></blockquote>
 <p><b>NO-MULTIPLE-SLOTVALUES-PLACE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
 <p>(<b>slot-boundp</b> instance slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>function</i></p>
-<blockquote>Tests if a specific slot in an instance is bound, returning true or false. Can be used in :after methods on initialize instance. Implented using slot-boundp-using-class.</blockquote><p><b>SLOT-BOUNDP-USING-CLASS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
-<p><b>SLOT-DEFINITION-FACETS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
-<p>(<b>slot-facet-value</b> object slotname facetname)&nbsp;&nbsp;&nbsp;<i>function</i></p>
+<blockquote>Tests if a specific slot in an instance is bound, returning true or false. Can be used in :after methods on initialize instance. Implented using slot-boundp-using-class.</blockquote><p>(<b>slot-boundp-using-class</b> class instance slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
+<blockquote>implements slot-boundp - see the AMOP</blockquote><p>(<b>slot-definition-facets</b> slot-definition)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
+<blockquote>return the facets defined for the slot-definition</blockquote><p>(<b>slot-facet-value</b> object slotname facetname)&nbsp;&nbsp;&nbsp;<i>function</i></p>
 <blockquote>Returns the value of the facet facetname on the slot slotname for the object. 
 Implemented in terms of slot-facet-value-using-class</blockquote><p>(<b>slot-facet-value-using-class</b> object-class object slotname facetname)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
 <blockquote>Returns the value of the facet facetname on the
@@ -69,8 +82,8 @@ slot slotname for this class-object. The default primary method signals an error
 is defined for this slot. If the facet is unbound for this slot, the default primary method signals an error of type 
 facet-unbound.</blockquote><p>(<b>slot-makunbound</b> instance slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>function</i></p>
 <blockquote>Restores a slot in an instance to the unbound state. Calls slot-missing if no slot of the given name exists. 
-Implemented using slot-makunbound-using-class. If multi-valued, then place is used, and making a place unbound causes it to be removed if there are subsequent places, i.e., if places 1-6 exist, and place 4 is unbound, then the value of place 5 is now accessible only at place 4, etc.</blockquote><p><b>SLOT-MAKUNBOUND-USING-CLASS</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
-<p>(<b>slot-unbound</b> class instance slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
+Implemented using slot-makunbound-using-class. If multi-valued, then place is used, and making a place unbound causes it to be removed if there are subsequent places, i.e., if places 1-6 exist, and place 4 is unbound, then the value of place 5 is now accessible only at place 4, etc.</blockquote><p>(<b>slot-makunbound-using-class</b> class instance slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
+<blockquote>implements slot-makunbound - see the AMOP</blockquote><p>(<b>slot-unbound</b> class instance slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
 <blockquote>Called when an unbound slot is read in an instance whose metaclass is standard-class. 
 The default method signals an error of condition type unbound-slot (with slots :name, naming the slot that was unbound, and :instance which is the instance that had the unbound slot). The function is called only by the function slot-value-using-class.</blockquote><p>(<b>slot-value</b> object slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>function</i></p>
 <blockquote>Calls slot-missing if there is no slot of the given name. Implemented using slot-value-using-class. Setf'able</blockquote><p>(<b>slot-value-using-class</b> class object slot-name &optional place)&nbsp;&nbsp;&nbsp;<i>generic-function</i></p>
@@ -80,7 +93,7 @@ The default method signals an error of condition type unbound-slot (with slots :
 <p><b>UNBOUND-SLOT-PLACE</b></p>&nbsp;&nbsp;&nbsp;<i><font color="FF0000">undocumented</font></i></p>
 <p><b>value-type-decl-incompatible</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
 <blockquote>the value-type declared on the slot is not
-compatible with the value-type of the slot on a “parent”
+compatible with the value-type of the slot on a parent
 class. Specifically, it must be the same or a proper subtype.</blockquote><blockquote>Class precedence list: <tt> value-type-decl-incompatible clos-facets-incompatible clos-facets-program-error clos-facets-error program-error error serious-condition condition standard-object t</tt></blockquote>
 <p><b>value-type-error</b>&nbsp;&nbsp;&nbsp;<i>condition</i></p>
 <blockquote>an attempt to directly write a value to a cell that conflicts with the declared value-type.</blockquote><blockquote>Class precedence list: <tt> value-type-error clos-facets-cell-error clos-facets-error cell-error error serious-condition condition standard-object t</tt></blockquote>

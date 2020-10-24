@@ -2,13 +2,13 @@
 (defpackage :cl-lib-initializations (:use common-lisp)  (:export #:add-initialization #:initializations #:delete-initialization #:reset-initializations #:*cold-initialization-list* #:*warm-initialization-list* #:*once-initialization-list* #:*gc-initialization-list* #:*before-cold-initialization-list* #:*after-gc-initialization-list* #:*initialization-keywords*) (:documentation "Symbolics compatible initializations package for common lisp"))
 (defpackage :cl-lib-essentials (:use common-lisp :cl-lib-initializations)  (:export #:macro-indent-rule #:version-reporter #:detailed-version-reporter #:report-version #:interactive-lisp-p #:*cl-lib-version-announce-p* #:*cl-lib-version-reporter-string* #:*cl-lib-detailed-version-reporter-string*) (:documentation "Essential functions for implementing the cl-lib"))
 
-(defparameter *cl-lib-defpackage-version*  '(cl-lib-essentials:version-reporter "CL-LIB-Defpackage" 5 16 
-                                             ";; Time-stamp: <2019-11-08 16:16:19 Bradford Miller(on Aragorn.local)>" 
-                                             "CVS: $Id: cl-lib-defpackage.lisp,v 1.7 2011/12/17 03:14:07 millerb Exp $
-;; FiveAM"))
+(defparameter *cl-lib-defpackage-version*  '(cl-lib-essentials:version-reporter "CL-LIB-Defpackage" 5 18 
+                                             ";; Time-stamp: <2020-09-12 17:46:00 gorbag>" 
+                                             "fix version"))
 
 ;; the ugliness above (putting the defpackages first) is to support the auto-update of the timestamp on the file (default top 5 lines).
 
+;; 5.18  1/ 3/20 firstn wasn't exported?! Also create :clos-facet-tests package
 ;; 5.17 11/ 8/19 occurs wasn't exported?!
 ;; 5.16  2/16/19 Start to add FiveAM testing capabilities
 ;; 5.14 12/16/11 detailed-version-reporter
@@ -24,7 +24,7 @@
 
 ;; This portion of CL-LIB Copyright (C) 1984-2011 Bradford W. Miller and the
 ;;                                                Trustees of the University of Rochester
-;; Some portions are Copyright (C) 2019 by Bradford W. Miller
+;; Some portions are Copyright (C) 2019, 2020 by Bradford W. Miller
 ;; 
 ;; This library is free software; you can redistribute it and/or modify it under the terms of the GNU 
 ;; Lesser General Public License as published by the Free Software Foundation; either version 3.0 of 
@@ -78,6 +78,7 @@
    ;;           cl-sets.lisp
    #:list-without-nulls #:cartesian-product #:cross-product 
    #:permutations #:powerset #:circular-list #:occurs
+   #:firstn #:in-order-union #:fast-union #:fast-intersection
 
    #:seq-butlast #:seq-last #:dosequence
    #:prefix?
@@ -108,7 +109,7 @@
            
    #:flags 
    #:read-delimited-string #:mapatoms
-   #:reverse-alist #:fast-union #:fast-intersection
+   #:reverse-alist 
    #:true-list-p #:dotted-list-p #:progfoo #:foo #:mv-progfoo #:mv-foo #:with-rhyme
 
    #:get-compiled-function-name #:fast-read-char #:fast-read-file-char
@@ -195,4 +196,3 @@
            ;; support fns
            #:clear-slot-value-cache)
   (:documentation "See the file 'Extending CLOS with Facets.doc' for extensive documentation."))
-

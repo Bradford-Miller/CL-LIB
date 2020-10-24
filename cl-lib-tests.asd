@@ -1,6 +1,6 @@
-;; Time-stamp: <2019-10-26 18:16:47 Bradford Miller(on Aragorn.local)>     
+;; Time-stamp: <2020-01-03 17:33:02 Bradford Miller(on Aragorn.local)>     
 
-;; This portion of CL-LIB Copyright (C) 2019 Bradford W. Miller
+;; This portion of CL-LIB Copyright (C) 2019, 2020 Bradford W. Miller
 ;; 
 ;; This library is free software; you can redistribute it and/or modify it under the terms of the GNU 
 ;; Lesser General Public License as published by the Free Software Foundation; either version 3.0 of 
@@ -22,11 +22,12 @@
     :components
     ((:file "cl-lib-tests")
      (:module "functions"
+              :depends-on ("cl-lib-tests")
               :serial t
               :components
               ((:file "cl-lib-function-tests")))
      (:module "packages"
-              :depends-on ("functions") ; macro definition
+              :depends-on ("functions" "cl-lib-tests") ; macro definition
               :serial t
               :components
               ((:file "initializations-tests" )

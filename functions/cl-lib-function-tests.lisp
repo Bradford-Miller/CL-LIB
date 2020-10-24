@@ -1,13 +1,14 @@
 (in-package cl-lib-tests)
 
-(version-reporter "CL-LIB-Func Tests" 5 17
-                  ";; Time-stamp: <2019-11-08 16:17:07 Bradford Miller(on Aragorn.local)>"
+(version-reporter "CL-LIB-Func Tests" 5 18
+                  ";; Time-stamp: <2020-01-05 16:55:11 Bradford Miller(on Aragorn.local)>"
                   ";; new 5am testing")
 
+;; 5.18   1/ 3/20 fix array-fn test
 ;; 5.17  10/26/19 move etest here so we don't have problems later; fix various typos
 ;; 5.16.  3/16/19 5am testing (new)
 
-;;; Copyright (C) 2019 by Bradford W. Miller, bradfordmiller@mac.com
+;;; Copyright (C) 2019,2020 by Bradford W. Miller, bradfordmiller@mac.com
 ;;;
 ;; This library is free software; you can redistribute it and/or modify it under the terms of the GNU 
 ;; Lesser General Public License as published by the Free Software Foundation; either version 3.0 of 
@@ -41,13 +42,13 @@
   "test fns in the cl-array-fns file"
 
   (let* ((foo (list '(a b) '(c d) '(e f)))
-         (a1 (make-array '(2 3) :initial-contents foo))
+         (a1 (make-array '(3 2) :initial-contents foo))
          a2)
              
     (is (Prefix? "foobar" "foobarbletch"))
     (is (not (Prefix? "foo123" "foo321ccd")))
     (is (not (Prefix? "foo123" "foo12")))
-    (is (equalp (setq a2 (copy-arry a1)) a1))
+    (is (equalp (setq a2 (copy-array a1)) a1))
     (is (not (eq (car foo) (aref a1 0))))
     (is (equalp (seq-butlast foo) '((a b) (c d))))
     (is (equalp (seq-last foo) '(e f)))))

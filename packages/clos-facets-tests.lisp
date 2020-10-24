@@ -1,11 +1,11 @@
 (in-package :clos-facets)
 
 (cl-lib:version-reporter "CL-LIB-CLOS-Facets-Tests" 5 17 
-                         ";; Time-stamp: <2019-11-08 16:41:54 Bradford Miller(on Aragorn.local)>" 
+                         ";; Time-stamp: <2020-01-04 17:14:12 Bradford Miller(on Aragorn.local)>" 
                          "CVS: $Id: clos-facets-tests.lisp,v 1.3 2011/11/04 14:10:52 gorbag Exp $
 ;; development - note warnings on compile are OK")
 
-;; This portion of CL-LIB Copyright (C) 2003-2008 Bradford W. Miller
+;; This portion of CL-LIB Copyright (C) 2003-2008, 2019, 2020 Bradford W. Miller
 ;; 
 ;; This library is free software; you can redistribute it and/or modify it under the terms of the GNU 
 ;; Lesser General Public License as published by the Free Software Foundation; either version 3.0 of 
@@ -28,9 +28,9 @@
 ;; mumble lets us test the basics: value-type and multiple slot-values.
 
 ;; convert to 5am 3/3/19 BWM
-(in-package :cl-lib-tests)
+(in-package :cl-lib-tests) 
 
-(deftype hack-valid-symbol () (member 'a 'b 'c 'd 'e))
+(deftype hack-valid-symbol () '(member a b c d e))
 
 (defclass mumble ()
   ((mumble-slota :initarg :a :accessor slota :value-type hack-valid-symbol) ; check value-type
@@ -98,10 +98,10 @@
 
 (test facet-value-type-errors
   (setq *mumble* (make-instance 'cl-lib-tests::mumble :a 'a :b 'b))
-  (is (etest value-type-error (slotb-writer 'g *mumble*)))
-  (is (etest value-type-error (setf (slota *mumble*) 7)))
-  (is (etest value-type-error (setf (slotc *mumble*) 9)))
-  (is (etest unbound-slot (slotc *mumble* 8)))
-  (is (etest no-multiple-slotvalues (slotb-reader *mumble* 2))) ;; should give an error on compile!
-  (is (etest no-multiple-slotvalues (setf (slota *mumble* 3) 'c)))) ;; should give an error on compile! (wrong number of args - slota is not multi-valued)
+  (is (etest clos-facets:value-type-error (slotb-writer 'g *mumble*)))
+  (is (etest clos-facets:value-type-error (setf (slota *mumble*) 7)))
+  (is (etest clos-facets:value-type-error (setf (slotc *mumble*) 9)))
+  (is (etest clos-facets:unbound-slot (slotc *mumble* 8)))
+  (is (etest clos-facets:no-multiple-slotvalues (slotb-reader *mumble* 2))) ;; should give an error on compile!
+  (is (etest clos-facets:no-multiple-slotvalues (setf (slota *mumble* 3) 'c)))) ;; should give an error on compile! (wrong number of args - slota is not multi-valued)
 

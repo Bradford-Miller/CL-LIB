@@ -1,5 +1,23 @@
 <html><head><title>CL-LIB-CONSOLE</title></head><body><h3>API for package CL-LIB-CONSOLE</h3>
-<blockquote>UNDOCUMENTED</blockquote>
+<blockquote>The motivation for this package, initially, was the lack of a distiguished *error-output* in LispWorks, 
+that is, unlike allegro, access to file descriptor 2 was not available, and so programs that are intended 
+to be pipes have no place to put an error, other than a file.
+
+This package allows one to create a stream into a popup console window and bind *error-output* or pretty much 
+anything else to it.
+
+How to use:
+First, call (create-console). By default, a read-only console is created, suitable for displaying errors 
+  as your program prints them, (create-console :rw) will put up an editor buffer (read/write). 
+  In either case, a console object is returned, which is needed for the following calls. Optionally, you can
+  specify a second argument, which will be the title of the window.
+
+(console-stream console) returns a stream associated with a console, e.g., the thing to format to.
+
+(format-console console format-string &rest args) is format for a console.
+
+(read-line-console console &optional eof-error-p eof-value) is read-line for a console, but the console 
+    argument is required.</blockquote>
 <p>(<b>console-stream</b> console)&nbsp;&nbsp;&nbsp;<i>function</i></p>
 <blockquote>Return the stream of a console</blockquote><p>(<b>create-console</b> &optional (type ro) (title (format NIL popup console ~a type)))&nbsp;&nbsp;&nbsp;<i>function</i></p>
 <blockquote>Makes sure the environment is ready for popping up a window; two kinds of consoles are available, :ro and :rw, default :ro</blockquote><p>(<b>destroy-console</b> console)&nbsp;&nbsp;&nbsp;<i>function</i></p>

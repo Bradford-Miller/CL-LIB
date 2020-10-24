@@ -1,9 +1,10 @@
 (in-package CL-LIB)
 
-(cl-lib:version-reporter "CL-LIB-Resources Tests" 5 17 ";; Time-stamp: <2019-10-19 14:04:18 Bradford Miller(on Aragorn.local)>" 
+(cl-lib:version-reporter "CL-LIB-Resources Tests" 5 18 ";; Time-stamp: <2020-01-05 17:17:17 Bradford Miller(on Aragorn.local)>" 
                          "new")
 
-;; 5.16. 2/17/19 5am testing (new)
+;; 5.18   1/ 5/20 In lispworks, make sure we specifically refer to cl-lib version of resources
+;; 5.16.  2/17/19 5am testing (new)
 
 ;; This portion of CL-LIB Copyright (C) 2019 Bradford W. Miller
 ;; 
@@ -37,7 +38,7 @@
   (setf (aref r 3) nil)
   (setf (aref r 4) nil))
 
-(defresource (test-fixed-resource () :initial-copies 5 :initializer clear-fixed-resource)
+(cl-lib::defresource (test-fixed-resource () :initial-copies 5 :initializer clear-fixed-resource)
     (make-array (list 5) :element-type t :initial-element nil))
 
 (5am:test allocate-fixed-resources "Test that we can allocate the fixed resources, in excess of the pool"
@@ -61,12 +62,12 @@
         (is (not (eq foo4 foo5)))
         (is (not (eq foo5 foo6)))
         ;; at this point, all resources should be in use
-        (map-resource #'(lambda (object in-use)
+        (cl-lib::map-resource #'(lambda (object in-use)
                           (is in-use))
                       'test-fixed-resource)
         ;; deallocate one resource and check that it was the only one marked to not be in use
         (deallocate-test-fixed-resource foo4)
-        (map-resource #'(lambda (object in-use)
+        (cl-lib::map-resource #'(lambda (object in-use)
                           (cond
                             ((eq foo4 object)
                              (is (not in-use))
@@ -79,7 +80,7 @@
            ;; it should be eq to our old foo4 (not a new one)
            (is (eq foo4 foo))
            ;; and all should be in-use again
-           (map-resource #'(lambda (object in-use)
+           (cl-lib::map-resource #'(lambda (object in-use)
                              (is in-use))
                          'test-fixed-resource))))
 
@@ -87,7 +88,7 @@
 (5am:test clear-fixed-resource
       (clear-test-fixed-resource)
       ;; should all be unallocated
-      (map-resource #'(lambda (object in-use)
+      (cl-lib::map-resource #'(lambda (object in-use)
                         (is (not in-use)))
                     'test-fixed-resource))
 
@@ -98,7 +99,7 @@
     (dotimes (i2 a2)
       (setf (aref r i1 i2) 0))))
 
-(defresource (test-variable-resource (a1 a2) :initializer clear-variable-resource)
+(cl-lib::defresource (test-variable-resource (a1 a2) :initializer clear-variable-resource)
     (make-array (list a1 a2) :element-type t :initial-element 0))
 
 (5am:test allocate-variable-resources "Test that we can allocate the variable resources, in excess of the pool"
@@ -122,12 +123,12 @@
         (is (not (eq foo4 foo5)))
         (is (not (eq foo5 foo6)))
         ;; at this point, all resources should be in use
-        (map-resource #'(lambda (object in-use)
+        (cl-lib::map-resource #'(lambda (object in-use)
                           (is in-use))
                       'test-variable-resource)
         ;; deallocate one resource and check that it was the only one marked to not be in use
         (deallocate-test-variable-resource foo4)
-        (map-resource #'(lambda (object in-use)
+        (cl-lib::map-resource #'(lambda (object in-use)
                           (cond
                             ((eq foo4 object)
                              (is (not in-use))
@@ -140,7 +141,7 @@
            ;; it should NOT be eq to our old foo4 (not a new one)
            (is (not (eq foo4 foo)))
            ;; and original foo4 should not be in use
-           (map-resource #'(lambda (object in-use)
+           (cl-lib::map-resource #'(lambda (object in-use)
                              (if (eq object foo4)
                                  (is (not in-use))
                                  (is in-use)))
@@ -151,7 +152,7 @@
            ;; it should be eq to our old foo4 (not a new one)
            (is (eq foo4 foo))
            ;; and all should be in-use again
-           (map-resource #'(lambda (object in-use)
+           (cl-lib::map-resource #'(lambda (object in-use)
                              (is in-use))
                          'test-variable-resource))))
 
@@ -159,6 +160,6 @@
 (5am:test clear-variable-resource
       (clear-test-variable-resource)
       ;; should all be unallocated
-      (map-resource #'(lambda (object in-use)
+      (cl-lib::map-resource #'(lambda (object in-use)
                         (is (not in-use)))
                     'test-variable-resource))

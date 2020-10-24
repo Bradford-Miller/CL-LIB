@@ -16,10 +16,10 @@
 <blockquote>Alist of initialization-list keywords and the list itself. Third element,
 if present, is the default run time, :normal if absent. This can be overridden
 by the add-initialization function.</blockquote>
-<blockquote>Initial value: <tt>((:WARM CL-LIB-INITIALIZATIONS:*WARM-INITIALIZATION-LIST*) (:COLD CL-LIB-INITIALIZATIONS:*COLD-INITIALIZATION-LIST*) (:BEFORE-COLD CL-LIB-INITIALIZATIONS:*BEFORE-COLD-INITIALIZATION-LIST*) (:ONCE CL-LIB-INITIALIZATIONS:*ONCE-INITIALIZATION-LIST* :FIRST) (:GC CL-LIB-INITIALIZATIONS:*GC-INITIALIZATION-LIST*) (:AFTER-GC CL-LIB-INITIALIZATIONS:*AFTER-GC-INITIALIZATION-LIST*))</tt></blockquote>
+<blockquote>Initial value: <tt>((:WARM CL-LIB-INITIALIZATIONS:*WARM-INITIALIZATION-LIST*) (:COLD CL-LIB-INITIALIZATIONS:*COLD-INITIALIZATION-LIST*) (:BEFORE-COLD CL-LIB-INITIALIZATIONS:*BEFORE-COLD-INITIALIZATION-LIST*) (:ONCE CL-LIB-INITIALIZATIONS:*ONCE-INITIALIZATION-LIST* :FIRST) (:GC CL-LIB-INITIALIZATIONS:*GC-INITIALIZATION-LIST*) (:AFTER-GC CL-LIB-INITIALIZATIONS:*AFTER-GC-INITIALIZATION-LIST*) (:QUIT CL-LIB-INITIALIZATIONS::*QUIT-INITIALIZATION-LIST*))</tt></blockquote>
 <p><b>*once-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
 <blockquote>Initializations to be run only once</blockquote>
-<blockquote>Initial value: <tt>NIL</tt></blockquote>
+<blockquote>Initial value: <tt>(#S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "test-init-once4726" :FORM (SETQ CL-LIB-TESTS::*TEST-VAR* 2) :FLAG T :RUN (:FIRST)))</tt></blockquote>
 <p><b>*warm-initialization-list*</b>&nbsp;&nbsp;&nbsp;<i>variable</i></p>
 <blockquote>Initializations run just after booting any world</blockquote>
 <blockquote>Initial value: <tt>(#S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "User Notification" :FORM (IF (CL-LIB-ESSENTIALS:INTERACTIVE-LISP-P) (FORMAT *ERROR-OUTPUT* "~2&--> Running Warm Initializations~2%")) :FLAG T :RUN (:NORMAL)) #S(CL-LIB-INITIALIZATIONS::INITIALIZATION :NAME "Announce cl-lib is on the job" :FORM (WHEN (AND CL-LIB-ESSENTIALS:*CL-LIB-VERSION-ANNOUNCE-P* (CL-LIB-ESSENTIALS:INTERACTIVE-LISP-P)) (CL-LIB-ESSENTIALS:REPORT-VERSION)) :FLAG T :RUN (:NORMAL)))</tt></blockquote>

@@ -1,7 +1,7 @@
 ;;;; -*- mode: lisp -*-
 ;; added by bradfordmiller@mac.com
 (cl-lib-essentials:version-reporter "LispDoc" 5 71 
-                                    ";; Time-stamp: <2019-11-08 16:42:56 Bradford Miller(on Aragorn.local)>"
+                                    ";; Time-stamp: <2020-01-03 17:11:41 Bradford Miller(on Aragorn.local)>"
                                     "CVS: $Id: lispdoc.lisp,v 1.1.1.1 2007/11/26 15:13:21 gorbag Exp $
 updated packages")
 
@@ -218,6 +218,11 @@ updated packages")
 
 ;; 5.17 fix for current packages
 (defun generate-docfiles ()
-  (lispdoc-html "~/Lisp/FreeDev/CL-LIB/packages/" :clos-facets :cl-lib-initializations :cl-lib-console :cl-lib-scheme-streams :cl-lib-queues :cl-lib-better-errors :cl-lib-prompt-and-read :cl-lib-locatives :cl-lib-resources :cl-lib-syntax :cl-lib-nregex :cl-lib-chart :cl-lib-transcripts :cl-lib-reader)
+  (lispdoc-html "~/Lisp/FreeDev/CL-LIB/packages/" :clos-facets :cl-lib-initializations :cl-lib-console
+                ;; these will end up in functions since they are in :cl-lib
+                #|| :cl-lib-scheme-streams
+                :cl-lib-queues :cl-lib-better-errors :cl-lib-prompt-and-read :cl-lib-locatives :cl-lib-resources
+                :cl-lib-syntax :cl-lib-nregex :cl-lib-chart :cl-lib-transcripts :cl-lib-reader ||#
+                )
   (lispdoc-html "~/Lisp/FreeDev/CL-LIB/functions/" :cl-lib-essentials :cl-lib))
 ;; new eof
