@@ -1,0 +1,286 @@
+;; Time-stamp: <2021-02-08 11:42:10 gorbag>
+
+;; 5.19f - 2/ 8/21 by miller make remove-keyword-arg more robust to odd numbers of argument in argument-list
+;; 5.18  - 1/ 3/20 by miller Fix some tests, make fast-union use #'eql as default predeicate
+;; 5.17  -10/26/19 by miller Add lispworks specific (gc aware) code to resources
+;;                             various fixes to the test suite
+;; 5.16  - 2/18/19 by miller Start to add FiveAM tests to allow automated regression testing, particularly for
+;;                             packages (rather than individual functions). FiveAM is NOT required
+;;                             to use CL-LIB, however, if it is loaded, before CL-LIB is,
+;;                             you will be able to run the regression
+;;                             tests too. First cut: initializations.lisp
+;;                           Additionally, port initializations.lisp to SBCL, add SBCL specific code to
+;;                             interactive-lisp-p, getenv, get-compiled-function-name, make-keyword
+;;                          
+;; 5.15  - 1/27/19 by miller Add asdf (.asd) files to distro as developed for sbcl (ROSlisp).
+;; 5.15p                        Add *debug-initializations* to initializations.lisp
+;; 5.14f -12/16/11 by miller add detailed-version-reporter for 3.4.5 type versions numbers
+;; 5.13p -11/16/11 by miller add *suppress-logs* to transcript package to
+;;                           make it easy to override lower-level code while testing
+;; 5.12p -11/10/11 by miller Have open-log-stream-for-module make sure it gets a valid module name
+;; 5.13f -10/19/11 by miller Lispworks now has it's own true-list-p function so use that one on that platform
+;; 5.11p - 5/16/11 by miller LispWorks 64-bit has different GC functions
+;; 5.12f-  7/11/08 by miller de-alistify, dotted-list-p, dotted-list
+;; 5.10p-  6/16/08 by miller comment out use of low package in locatives.lisp
+;; 5.11f-  5/ 3/08 by miller same as 5.9p
+;; 5.9p-   5/ 3/08 by miller Update licenses per file to GNU-3.0 if no prior (C) notice present
+;; 5.8p-   5/ 2/08 by miller Transcripts: open-transcript-stream-p open-log-stream-p
+;; 5.10f-  4/23/08 by miller export *keyword-package* in LW
+;; 5.9f -  2/19/08 by miller New fn - tail-equalp (cl-list-fns.lisp)
+;; 5.8f -  1/30/08 by miller New fn - key-value-list-p (keywords.lisp)
+;; 5.7f - 11/22/07 by miller Add documentation strings to a number of functions and packages (lipdoc)
+;; 5.7p - 11/22/07 by miller Add documentation strings to a number of functions and packages (lipdoc)
+;;                           Add *quit-initialization-list*, and bind for LispWorks
+;; 5.6f - 10/10/07 by miller Add getenv (cross-platform interface to getting environment variable values)
+;; 5.5f - 7/12/07 by miller Enhance make-load-form-with-all-slots for
+;;                           flexability, in particular to deal with slots
+;;                           whose values are themselves structures (and
+;;                           thus need to have make-load-form called).
+;; 5.6p - 7/10/07 by miller Added write-log-header generic fn to transcripts
+;; 5.4f - 3/28/07 by miller Added alistify to cl-list-fns
+;; 5.3f - 3/13/07 by miller Added slot-for-initarg to clos-extensions
+;; 5.2f - 2/01/07 by miller Added update-alist-alist; Enhanced
+;;                           extract-keyword to return the whole binding
+;;                           list for destructive modification if desired
+;; 5.1f - 12/31/06 by miller Added remove-n and delete-n to list functions
+;; 5.5p - 9/29/06 by miller A number of improvements to clos-facets, tests
+;;                           now load under LispWorks, multiple values
+;;                           partially implemented
+;; 5.4p - 9/29/06 by miller Added LispDoc (Sven Van Caekenberghe) to
+;; 5.3p - 7/28/06 by miller Make lispworks defsystem use CL_LIB_BASE to
+;;                           determine where CL-LIB is installed; use
+;;                           logical pathnames
+;; 5.2p - 2/11/06 by miller preliminary version of facets
+;; 5.1p - 7/12/05 by miller add interactive-lisp-p to cl-lib-essentials
+;;                           change defaults for version printing,
+;;                           etc. based on that.
+;; 5.0fp - 6/24/05 by miller Reorganized directories.  New popup-console
+;;                            package for lispworks Make initializations
+;;                            silent on lispworks in a delivered image
+
+
+;;; Older entries
+
+
+;; 4.46  -   1/ 9/03 by abm061      Bug fix to rlist-to-scheme-stream; stream
+;;                                   was not being correctly returned.
+;; 4.45  -  12/18/02 by abm061      Have scheme-force return first-time-p as
+;;                                   second value, similarly have ss-tail
+;;                                   return second value if computed from 
+;;                                   closure
+;; 4.44  -  12/04/02 by abm061      Formatting, moved scheme-streams from
+;;                                   cl-extensions.lisp to their own file
+;; 4.43  -  10/30/02 by abm061      Fix timestamp dropping
+;;                                   Update to latest version of series (2.2.5)
+;; 4.42  -   8/29/02 by abm061      frame-pane (in cl-lib-extensions) already
+;;                                   defined in lispworks!
+;;                                  Reformat this file for 80col
+;; 4.41  -   7/23/02 by abm061      remove-keyword-arg now returns multiple 
+;;                                   values
+;; 4.40  -   6/10/02 by abm061      Update locatives.lisp for Lispworks 4.2
+;; 4.39  -   6/07/02 by abm061      Finish port of initilizations.lisp for 
+;;                                   Lispworks
+;; 4.38  -   6/07/02 by miller      New clim-extensions.lisp
+;; 4.37  -   6/06/02 by abm061      resources.lisp not needed by LispWorks
+;; 4.36  -   6/04/02 by abm061      Updated get-compiled-function-name for 
+;;                                   LispWorks 4.2
+;; 4.35  -   6/03/02 by abm061      Updated initializations.lisp for LispWorks
+;; 4.34  -  12/27/01 by miller      Add an assert to scheme-force to make sure
+;;                                   it has a valid argument (to help debug 
+;;                                   using code)
+;; 4.33  -  12/03/01 by miller      Change timestamp to use leading 0s for 
+;;                                   day/month field for more consistent 
+;;                                   results column-wise.
+;; 4.32  -  11/30/01 by miller      First part of a port to LispWorks, fixed a 
+;;                                   problem lispworks has with #|| pairs that 
+;;                                   span lines in initializations.lisp by 
+;;                                   changing it to a #+hell-freezes-over 
+;;                                   directive.
+;;                                  Port to lispworks of locatives and 
+;;                                   defsystem construction of minimal-cl-lib 
+;;                                   by Noel.Massey@motorola.com
+;; 4.31  -  11/01/01 by miller      Add Waters/Norviq queue operations 
+;;                                   (queues.lisp)
+;; 4.30  -  10/25/01 by miller      Add prompt-and-read to minimal-cl-lib.
+;; 4.29  -   9/ 7/01 by miller      Fix calls to open-stream-p in transcripts 
+;;                                   for MCL (doesn't like getting called on 
+;;                                   NIL)
+;; 4.28  -   9/ 7/01 by miller      Add rlist-to-scheme-stream and 
+;;                                   fake-scheme-delay to round out schemey 
+;;                                   functions
+;; 4.27  -   9/ 4/01 by miller      Add tassert (transcript assert) a function 
+;;                                   originating in TDS to the transcript 
+;;                                   package.
+;; 4.26  -   3/ 8/01 by miller      Add some compatibility functions for 
+;;                                   CLOS/MOP (MCL only) by Shannon Spires,
+;;                                   and reenable clos-extensions.lisp for MCL 
+;;                                   in minimal version.
+;; 4.25  -   3/ 7/01 by miller      add some compatibility functions for 
+;;                                   CLOS/MOP (MCL only)
+;; 4.24  -   3/ 2/01 by miller      add new timestamp features for FRED 
+;;                                   (MCL only)
+;; 4.23.1 -  4/ 6/00 by miller      don't export NEQ in MCL (part of CCL).
+;; 4.23   -  2/21/00 by miller      port Minimal CL Lib to MCL 4.3
+;; 4.22.3 -  1/27/00 by miller      Fix locatives under allegro 5.0.1 to 
+;;                                   appropriately handle (locf *global*) forms.
+;; 4.22.2 - 12/21/99 by miller      Zero pad dates in the transcript
+;; 4.22.1 - 12/21/99 by miller      Additional exports on transcripts
+;; 4.22  - 12/20/99 by miller       Integrate transcripts package from TDS
+;; 4.21  - 12/04/99 by miller       command-line-arg from trains (may only be 
+;;                                   useful in allegro, but lets one get 
+;;                                   command line arguments by name).
+;; 4.20  - 11/22/99 by miller       fix toplevel:setq-default in allegro-stuff
+;;                                   in case toplevel isn't there!
+;; 4.19  - 11/18/99 by miller       fix so delayed-lep-init doesn't run when 
+;;                                   lep hasn't started.
+;; 4.18  - 12/ 2/98 by miller       new module: charts for constructing chart 
+;;                                   parsers and the like.
+;; 4.17.2-  5/15/98 by miller       fix another bug in 
+;;                                   generate-inherited-slot-writer; mapcan 
+;;                                   wasn't being called on list of response. 
+;;                                   (spliced too deep)
+;; 4.17.1-  5/14/98 by miller       fix bug in generate-inherited-slot-writer; 
+;;                                   didn't check that the slot was bound 
+;;                                   before building the writer.
+;; 4.17  -  5/13/98 by miller       new function - remove-keyword-arg
+;; 4.16  -  4/ 3/98 by miller       ignore writer slots for objects that have 
+;;                                   no :writer :accessor or :initarg
+;; 4.15  -  2/ 9/98 by miller       handle lists of structurses in structure 
+;;                                   slot (clos object printer)
+;; 4.14  -  2/ 4/98 by miller       make clos object printer handle a hook fn 
+;;                                   to determine when to quote
+;; 4.13  -  2/ 3/98 by miller       fixup clos object printer to deal with clos
+;;                                   objects in slots
+;; 4.12  -  4/18/96 by miller       updates to locatives package (allegro 4.3.1)
+;; 4.11  -  4/17/96 by miller       add defsys:release-system function for 
+;;                                   allegro md-defsystem
+;; 4.10  -  1/12/96 by miller       file reorganization; allow for a more 
+;;                                   minimal version to be built for apps.
+;; 4.9   - 12/12/95 by miller       export more of the clos helper code, add 
+;;                                   something to list initargs for a class.
+;; 4.8   -  7/ 7/95 by miller       (allegro only), add foreign-syntax 
+;;                                   defsystem module types.
+;; 4.7   -  6/29/95 by miller       add force-list (from tt).
+;; 4.6   -  6/12/95 by miller       add syntax.lisp, defines with-syntax and 
+;;                                   add-syntax for readtable handling.
+;; 4.5   -  2/21/95 by miller       update reader to use clim when available.
+;; 4.4   -  2/ 8/95 by miller       patch allegro's map-system to only hit 
+;;                                   things once.
+;; 4.3   -  1/12/95 by miller       have edit-system default to including 
+;;                                   components.
+;; 4.2   -  1/ 5/95 by miller       fix random-state patch (use 
+;;                                   tpl:setq-default)
+;; 4.1   - 12/19/94 by miller       add *supress-clim* variable to 
+;;                                   prompt-and-read           
+;; 4.0   - 12/ 6/94 by miller       What the hell, start a new version number 
+;;                                   (and put newest version on top so you can 
+;;                                   easily locate the last change).
+;;                                  Add clos-extensions.lisp. Basically, it's 
+;;                                   useful to make-load-form using these 
+;;                                   functions which will figure out the slots 
+;;                                   and how to dump them for you. Like 
+;;                                   make-load-form-saving-slots, but wraps 
+;;                                   things up in one form and handles 
+;;                                   inherited slots.
+
+;; 3.30 - 8/27/92 by miller make allegro initialize *random-state* on warm boot
+;; 3.31 - 9/25/92 by miller add indent methods for allegro (for the macros)
+;; 3.32 - 9/28/92 by miller add describe-object method for allegro for hashtables to describe the contents
+;; 3.33 - 9/28/92 by miller add :lep initialization list (runs after lep interface started).
+;; 3.34 - 10/29/92 by miller update re-to-dfa for ascii (had symbolics character types for operators)
+;; 3.35 - 11/12/92 by miller update parser error to return a file position when possible.
+;; 3.36 - 11/16/92 by miller increase sleep before :lep initializations are run to 8 secs.
+;; 3.37 - 11/20/92 by miller Add scheme stream model, and scheme force/delay (code by barmar@think.com)
+;; 3.38 - 11/30/92 by miller Remove clim code from warn-or-error... just use more normal case. May want to recast in
+;;                           terms of conditions (eventually).
+;; 3.39 - 12/2/92  by miller export scheme-stream-p
+;; 3.40 - 12/3/92  by miller new function: progfoo
+;; 3.41 - 12/8/92  by miller add Dick Waters series package to cl-lib (also man pages supplied for fi:clman).
+;; 3.42 - 12/10/92 by miller fix case sensitivity in macro-indent-rule (really a problem in fi/emacs, by my estimate, since
+;;                           it's the function that's case sensitive, but easy to just coerce everything to lowercase here).
+;; 3.43 - 12/31/92 by miller fix map-resource to use funcall instead of apply of user function.
+;; 3.44 -  1/ 7/93 by miller add mv-progfoo; prog1 is to progfoo as multiple-value-prog1 is to mv-progfoo.
+;;                           make ss-head and ss-tail handle non scheme-stream arguments by returning nil (allows cdr of
+;;                           nil type metaphor to be handled consistant with normal lists).
+;; 3.45 -  1/28/93 by miller minor enhancement to reader to eval expressions beginning with #\( <since that's what I
+;;                           always type :-)
+;; 3.46 -  2/ 8/93 by miller add with-rhyme macro (doesn't do anything, but is a nice "commentary" on specious code; no
+;;                           reason so must be rhyme :-).
+;; 3.47 -  2/15/93 by miller add get-compiled-function-name from example in email.
+;; 3.48 -  2/26/93 by miller add fast-read-char and fast-read-file-char from cutting@parc.xerox.com
+;; 3.49 -  3/ 1/93 by miller add maplist-dotted-list for orthogonality
+;; 3.50 -  3/ 2/93 by miller fix bug in above - was nconcing results instead of appending them.
+;; 3.51 -  4/ 7/93 by miller have let-maybe do constant folding
+;; 3.52 -  4/ 8/93 by miller add more logical functions: xor, eqv, nand and nor. Short circuit too!
+;; 3.53 -  4/ 9/93 by miller integrate some of Mark K's new functions, eg. the query library. (already partly used from
+;;                           earlier version)
+;; 3.54 -  4/26/93 by miller No new code, just reorganization into essential and non-essential directories; the latter
+;;                           not being loaded by the defsystem (not needed by Rhet, Shocker, etc.). Much duplicates
+;;                           what's in Mark K's repository too.
+;; 3.55 -  5/19/93 by miller patch to allegro #n# macro to handle common cases of
+;;                           non-circular eq preservation inside classes.
+;; 3.56 -  5/24/93 by miller add list-scheme-stream; an analogue to cl:list for scheme-streams.
+;; 3.57 -  5/28/93 by miller reimplement the dotted-list functions for higher efficiency (avoid nreverse), and avoid consing.
+;; 3.58 -  6/ 1/93 by miller reimplement fast-union, fast-intersection for even higher efficiency (no nreverse).
+;; 3.59 -  6/ 4/93 by miller change resources to use defstruct and single get for efficiency.
+;; 3.60 -  6/11/93 by miller add portable version of locatives (well, a simulation of them).
+;; 3.61 -  6/14/93 by miller generalize above, translation table provided for allegro (now walks code).
+;; 3.62 -  6/18/93 by miller add nregex code to cl-lib; more flexible (though slower) than re-to-dfa.
+;; 3.63 -  6/18/93 by miller incorporate some suggestions by smh@franz.com into locative code.
+;; 3.64 -  7/14/93 by miller put unwind-protect into raw-read-char code for allegro, so we don't get stuck in wrong mode
+;; 3.65 -  8/ 4/93 by miller add :cl-lib to *features*
+;; 3.66 - 10/20/93 by miller add raw-read-char-no-hang (for allegro)
+;; 3.67 - 10/21/93 by miller add extra delay to the raw-read stuff since the :cbreak isn't synchronous (sigh).
+;; 3.68 - 12/ 9/93 by miller add :lep feature if lep is present (for allegro), add while-not function 
+;;                           (I'd call it until, but series takes that).
+;; 3.69 - 12/29/93 by miller add copy-array
+;; 3.70 - 12/29/93 by miller update/improve resources code to define resource-specific (de)allocators, etc.
+;; 3.71 -  1/ 4/94 by miller add triangular array support (triangular-matrices.lisp)
+;; 3.72 -  1/ 5/94 by miller export copy-tarray, fix vanished taref-lower-tarray (overzealous kill?)
+;; 3.73 -  1/ 7/94 by miller fix bug in copy-tarray; reused dimensions from original array, instead of copying it (a list).
+;; 3.74 -  1/13/94 by miller fix bug in resources (code added in 3.70) that didn't properly splice in generated macro.
+;; 3.75 -  1/14/94 by miller minor changes for compatiblity with allegro 4.2 final.
+;; 3.76 -  1/31/94 by miller add back in some code to resrouces (e.g. map-foo)
+;; 3.77 -  2/ 4/94 by miller make update-alist eval in ltr order; dotted list functions now only expand passed fn once.
+;; 3.78 -  2/11/94 by miller separate error handling from cl-extensions into better-errors.lisp. Add clim hander for parse-error.
+;;                           add new "check" function; an enhanced version of assert.
+;; 3.79 -  4/ 6/94 by miller add prompt-and-read, prompt-for, and George Ferguson's popup-read-form and popup-error (clim only).
+;;                           the former use the latter if clim is available to create a popup window.
+;; 3.80 -  4/10/94 by miller port to MCL 2.0.1
+;; 3.81 -  4/25/94 by miller add load-once to minimize reloading of files outside a defsystem.
+;; 3.82 -  5/ 2/94 by miller add new allegro single-writer multi-reader character stream, for async ipc.
+;; 3.83 -  5/ 4/94 by miller export convert-to-presentation-type since it's generally useful for clim users.
+;; 3.84 -  5/ 4/94 by miller also separate and export *default-presentation-type* for the above; define clear-load-once.
+;; 3.85 -  5/ 4/94 by miller enhance 3.82's stream for better read-line performance, and handle stream-line-column and stream-start-line-p messages.
+;; 3.86 -  5/ 5/94 by miller fix glitch in add-initialization when list not previously bound.
+;; 3.87 -  5/ 6/94 by miller add clim-prompt-for-with-default
+;; 3.88 -  5/ 9/94 by miller fix bug in stream-unread-char for string-io-stream.
+;; 3.89 -  5/26/94 by miller change abort handler in clim prompt-and-read functions to see if an abort restart is present,
+;;                           and if not, to simply return the values (NIL T).
+;; 3.90 -  6/14/94 by miller don't have popup-read-form initially select the form, since the default then disappears.
+;; 3.91 -  6/21/94 by miller make convert-to-presentation-type a generic function, handle satisfies by way of 
+;;                           convert-satisfies-to-presentation-type generic function (exported).
+;; 3.92 -  6/22/94 by miller add string-io-stream-mw - a new multi-writer string-io-stream protocol.
+;; 3.93 -  7/ 5/94 by miller fix bug in mw protocol (not fixing up current writer).
+;;                           detect & error on empty record write in mw protocol. (terpri with no prior write).
+;; 3.94 -  7/ 7/94 by miller fix off by one error in stream:stream-listen on string-io-streams
+;; 3.95 -  7/12/94 by miller when closing string-io-stream, don't modify writer, just set eof-p to true.
+;; 3.96 -  7/14/94 by martin no longer export occurs.
+;; 3.97 -  7/21/94 by miller add stream:stream-input-available-p interface for streams. Calls stream-listen by default, but
+;;                           if not interactive, always returns t (so you see the eof).
+;;                           define, but don't implement flush-stream-buffer.
+;; 3.98 -  8/ 2/94 by miller don't export lookup.
+;; 3.99 - 11/17/94 by miller add md-defsystem for allegro, similar to example in manual: allows for 
+;;                           a development and master (release) directory.
+;; 3.100- 11/21/94 by miller explicitly convert directory info to pathname in above.
+;;
+;;
+;;                           suggestions/comments/complaints/contributions 
+;;                            welcome! Send them to bradfordmiller@mac.com and mark 
+;;                            them FOR CL-LIB.
+;;
+
+;; NB: miller@cs.rochester.edu, miller@mcc.com, bradfordmiller@mac.com, 
+;; abm061@email.mot.com, "gorbag" in the timestamps and Bradford.W.Miller@motorola.com all refer to
+;; the same person (AFAIK). bradfordmiller@mac.com is the best address to reach me at for
+;; anything about this library; the other addresses are obsolete. 
