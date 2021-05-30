@@ -3,8 +3,8 @@
 ;; load this AFTER :cl-lib-essentials
 
 ;; when updating the functions put this line before the CL-LIB one (so the time stamp is updated).
-(cl-lib-essentials:version-reporter "CL-LIB-FNS" 5 18
-                                    ";; Time-stamp: <2020-01-03 17:03:13 Bradford Miller(on Aragorn.local)>" 
+(cl-lib-essentials:version-reporter "CL-LIB-FNS" 5 19
+                                    ";; Time-stamp: <2021-02-08 11:40:04 gorbag>" 
                                     ";; 5am")
 
 

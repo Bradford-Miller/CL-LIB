@@ -1,8 +1,9 @@
 (in-package cl-lib)
 
-(version-reporter "CL-LIB-FNS-Keyword Fns" 5 16 ";; Time-stamp: <2019-02-23 11:35:44 Bradford Miller(on Aragorn.local)>" 
-                  ";; sbcl: make-keyword")
+(version-reporter "CL-LIB-FNS-Keyword Fns" 5 19 ";; Time-stamp: <2021-02-08 11:44:30 gorbag>" 
+                  ";; remove-keyword-arg more robust")
 
+;; 5.19 2/ 8/21 make remove-keyword-arg more robust to odd numbers of arguments in argument-list
 ;; 5.16 2/23/19 use sbcl's sb-int:*Keyword-package* instead of consing another
 ;; 5.8 1/30/08 key-value-list-p
 ;; 5.2 6/28/07 make arglist of make-keyword more illuminating
@@ -50,6 +51,8 @@
 	   (optimize (speed 3) (safety 0)))
   (ldiff input-list (member-if #'keywordp input-list)))
 
+;; 2/8/21 - no longer goes down input-list 2 entries at a time, which allows us to handle odd lambda-lists (where not
+;;             all arguments are keywords!) Now O(n) instead of O(n/2) but that's fine.
 ;; changed to return multiple values 7/23/02 BWM
 (defun remove-keyword-arg (keyword input-list)
   "from a set of keyword arguments, remove a particular pair marked by
@@ -72,9 +75,9 @@ null)."
     (values input-list nil nil))
    (t
     (mlet (new-list keyword-value removed-p)
-          (remove-keyword-arg keyword (cddr input-list))
+          (remove-keyword-arg keyword (cdr input-list))
       (if removed-p
-          (values (list* (car input-list) (cadr input-list) new-list)
+          (values (list* (car input-list) new-list)
                   keyword-value
                   removed-p)
           (values input-list nil nil))))))
