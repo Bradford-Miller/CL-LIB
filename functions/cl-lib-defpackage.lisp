@@ -82,7 +82,7 @@
 
    #:seq-butlast #:seq-last #:dosequence
    #:prefix?
-   #:force-string #:elapsed-time-in-seconds
+   #:elapsed-time-in-seconds
    #:factorial #:round-to #:round-off
    #:extract-keyword #:truncate-keywords #:remove-keyword-arg #:key-value-list-p
    #:update-alist #:update-alist-alist #:msetq #:mlet #:while #:while-not #:let*-non-null
@@ -108,7 +108,7 @@
    #:internal-real-time-in-seconds #:read-char-wait 
            
    #:flags 
-   #:read-delimited-string #:mapatoms
+   #:mapatoms
    #:reverse-alist 
    #:true-list-p #:dotted-list-p #:progfoo #:foo #:mv-progfoo #:mv-foo #:with-rhyme
 
@@ -161,6 +161,13 @@
            
    ;; queues
    #:make-queue #:queue-elements #:empty-queue-p #:queue-front #:dequeue #:enqueue #:safe-dequeue
+
+   ;; strings
+   #:string-search-car #:string-search-cdr #:parse-with-delimiter #:parse-with-delimiters #:parallel-substitute
+   #:parse-with-string-delimiter #:parse-with-string-delimiter* #:split-string #:format-justified-string
+   #:number-to-string #:null-string #:time-string 
+
+   #:read-delimited-string #:force-string
    ))
 
 ;; This portion of CL-LIB Copyright (C) 2019 Bradford W. Miller

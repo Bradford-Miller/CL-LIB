@@ -1,4 +1,4 @@
-(cl-lib:version-reporter "CL-LIB-Popup Console" 5 7 ";; Time-stamp: <2020-09-12 17:49:37 gorbag>" 
+(cl-lib:version-reporter "CL-LIB-Popup Console" 5 7 ";; Time-stamp: <2021-12-16 13:24:55 gorbag>" 
                          "CVS: $Id: popup-console.lisp,v 1.1.1.1 2007/11/26 15:13:24 gorbag Exp $
 ;; documentation")
 
@@ -140,7 +140,7 @@ First, call (create-console). By default, a read-only console is created, suitab
   (unless mp::*multiprocessing*
     (mp:initialize-multiprocessing))
 
-  #-(and cocoa lispworks7+)
+  #+(and cocoa lispworks7)
   (x-utils:ensure-motif-libraries))
 
 (defun initialize-console-window (type &key (min-width 200) (title nil title-p))
