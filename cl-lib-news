@@ -1,5 +1,7 @@
-;; Time-stamp: <2021-02-08 11:42:10 gorbag>
+;; Time-stamp: <2022-01-31 12:53:27 gorbag>
 
+;; 5.20f - 1/31/22 by miller Add remove-keyword-args - allows more
+;;                             efficient removal of multiple keywords in one call
 ;; xxx   - 9/ 6/21 by miller export functions in string.lisp
 ;; 5.19f - 2/ 8/21 by miller make remove-keyword-arg more robust to odd numbers of argument in argument-list
 ;; 5.18  - 1/ 3/20 by miller Fix some tests, make fast-union use #'eql as default predeicate

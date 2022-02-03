@@ -3,9 +3,9 @@
 ;; load this AFTER :cl-lib-essentials
 
 ;; when updating the functions put this line before the CL-LIB one (so the time stamp is updated).
-(cl-lib-essentials:version-reporter "CL-LIB-FNS" 5 19
-                                    ";; Time-stamp: <2021-02-08 11:40:04 gorbag>" 
-                                    ";; 5am")
+(cl-lib-essentials:version-reporter "CL-LIB-FNS" 5 20
+                                    ";; Time-stamp: <2022-01-31 12:53:51 gorbag>" 
+                                    ";; remove-keyword-args")
 
 
 ;; when updating the library (new package) put this line before the CL-LIB-FNS one (so the time stamp is updated).

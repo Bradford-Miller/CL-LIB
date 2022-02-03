@@ -2,12 +2,13 @@
 (defpackage :cl-lib-initializations (:use common-lisp)  (:export #:add-initialization #:initializations #:delete-initialization #:reset-initializations #:*cold-initialization-list* #:*warm-initialization-list* #:*once-initialization-list* #:*gc-initialization-list* #:*before-cold-initialization-list* #:*after-gc-initialization-list* #:*initialization-keywords*) (:documentation "Symbolics compatible initializations package for common lisp"))
 (defpackage :cl-lib-essentials (:use common-lisp :cl-lib-initializations)  (:export #:macro-indent-rule #:version-reporter #:detailed-version-reporter #:report-version #:interactive-lisp-p #:*cl-lib-version-announce-p* #:*cl-lib-version-reporter-string* #:*cl-lib-detailed-version-reporter-string*) (:documentation "Essential functions for implementing the cl-lib"))
 
-(defparameter *cl-lib-defpackage-version*  '(cl-lib-essentials:version-reporter "CL-LIB-Defpackage" 5 18 
-                                             ";; Time-stamp: <2020-09-12 17:46:00 gorbag>" 
-                                             "fix version"))
+(defparameter *cl-lib-defpackage-version*  '(cl-lib-essentials:version-reporter "CL-LIB-Defpackage" 5 20 
+                                             ";; Time-stamp: <2022-01-31 12:55:02 gorbag>" 
+                                             "remove-keyword-args"))
 
 ;; the ugliness above (putting the defpackages first) is to support the auto-update of the timestamp on the file (default top 5 lines).
 
+;; 5.20  1/31/22 remove-keyword-args
 ;; 5.18  1/ 3/20 firstn wasn't exported?! Also create :clos-facet-tests package
 ;; 5.17 11/ 8/19 occurs wasn't exported?!
 ;; 5.16  2/16/19 Start to add FiveAM testing capabilities
@@ -84,7 +85,7 @@
    #:prefix?
    #:elapsed-time-in-seconds
    #:factorial #:round-to #:round-off
-   #:extract-keyword #:truncate-keywords #:remove-keyword-arg #:key-value-list-p
+   #:extract-keyword #:truncate-keywords #:remove-keyword-arg  #:remove-keyword-args #:key-value-list-p
    #:update-alist #:update-alist-alist #:msetq #:mlet #:while #:while-not #:let*-non-null
    #:cond-binding-predicate-to 
    #:mapc-dotted-list #:mapcar-dotted-list #:mapcan-dotted-list #:maplist-dotted-list
