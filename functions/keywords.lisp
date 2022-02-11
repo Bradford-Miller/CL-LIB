@@ -1,7 +1,12 @@
 (in-package cl-lib)
 
-(version-reporter "CL-LIB-FNS-Keyword Fns" 5 19 ";; Time-stamp: <2021-02-08 11:44:30 gorbag>" 
-                  ";; remove-keyword-arg more robust")
+(version-reporter "CL-LIB-FNS-Keyword Fns" 5 20 ";; Time-stamp: <2022-01-31 12:57:03 gorbag>" 
+                  ";; remove-keyword-args")
+
+;; 5.20  1/31/22 add remove-keyword-args as a more efficient version of
+;;                   remove-keyword-arg when there are multiple
+;;                   keywords to be removed and we don't care about
+;;                   their value.
 
 ;; 5.19 2/ 8/21 make remove-keyword-arg more robust to odd numbers of arguments in argument-list
 ;; 5.16 2/23/19 use sbcl's sb-int:*Keyword-package* instead of consing another
@@ -58,7 +63,7 @@
   "from a set of keyword arguments, remove a particular pair marked by
 the passed keyword, i.e.  \(remove-keyword-arg :a '(:b 2 :a 3 :d 7))
 -> (:b 2 :d 7). Return multiple values, the first being the new list,
-the second being the argument to the keyword removed, and the third
+the second being the argument to the (first) keyword removed, and the third
 indicating if there were a removal (useful if the second value is
 null)."
   (declare (type keyword keyword) 
@@ -82,6 +87,25 @@ null)."
                   removed-p)
           (values input-list nil nil))))))
 
+;; sometimes we have multiple keywords
+(defun remove-keyword-args (keyword-list input-list)
+  "Similar to remove-keyword-arg, but removes all of multiple items at the same time. Note that the keyword-value is no longer returned."
+  (declare (type list keyword-list input-list)
+           (values new-list removed-p))
+
+  (cond
+   ((null input-list)
+    (values nil nil))
+   ((member (car input-list) keyword-list)
+    (values (remove-keyword-args keyword-list (cddr input-list)) t))
+   ((endp (cdr input-list))
+    (values input-list nil))
+   (t
+    (mlet (new-list removed-p)
+        (remove-keyword-args keyword-list (cdr input-list))
+      (if removed-p
+        (values (list* (car input-list) new-list) removed-p)
+        (values input-list nil))))))
 
 ;;
 ;;
